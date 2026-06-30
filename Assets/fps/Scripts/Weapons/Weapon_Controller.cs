@@ -10,7 +10,7 @@ public class Weapon_Controller : MonoBehaviour
     [SerializeField] private Player_Controller playerController;
         bool isInitialized = false;
     [SerializeField] private Animator weaponAnimator;
-    [SerializeField] WeaponClass currentWeapon;
+    
 
     [Header("Setting")]
     [SerializeField] float lookrotationAmount = 3f;

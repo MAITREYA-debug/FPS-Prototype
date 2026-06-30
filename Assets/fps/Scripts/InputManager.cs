@@ -20,11 +20,9 @@ public class InputManager : MonoBehaviour
     public bool isFiring { private set; get; }
 
 
-    //public bool Jump => input.Player.Jump.WasPressedThisFrame();
+   
     public static event Action OnJump;
     public static event Action OnInteract;
-    public static event Action OnFire;
-    public static event Action OnRightClick;
     public static event Action OnReload;
          
         private void Awake()
@@ -56,13 +54,8 @@ public class InputManager : MonoBehaviour
     {
         OnReload?.Invoke();
     }
-
-  
-
-    private void Fire_performed(InputAction.CallbackContext obj)
-    {
-        OnFire?.Invoke();
-    }
+     
+      
 
     private void Interact_performed(InputAction.CallbackContext obj)
     {
