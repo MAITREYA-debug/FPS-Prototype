@@ -229,10 +229,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: OnlyHandModel
       objectReference: {fileID: 0}
+    - target: {fileID: 2670928988342468123, guid: 7c1e6507cc3cd564dbaa14e69027f1e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 7c1e6507cc3cd564dbaa14e69027f1e9, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 109dea6d0017b88409e4c8bafbd46cc1, type: 2}
+    - target: {fileID: 7036213049465896255, guid: 7c1e6507cc3cd564dbaa14e69027f1e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8381984868952709122, guid: 7c1e6507cc3cd564dbaa14e69027f1e9, type: 3}
       propertyPath: 'm_Bones.Array.data[66]'
       value: 
@@ -803,21 +811,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f68332ae4329fa49b061501d956ac76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player_Controller
-  _controller: {fileID: 1204223776}
-  _camera: {fileID: 1315544888}
-  _animator: {fileID: 1204223777}
-  _gunPivot: {fileID: 1983368237}
-  _walkSpeed: 3
-  _runSpeed: 5
-  _currentSpeed: 0
+  characterController: {fileID: 0}
+  cameraHolder: {fileID: 0}
+  playerAnimator: {fileID: 0}
+  weapon_Controller: {fileID: 0}
+  currentSpeed: 0
+  speed: 0
+  currentSpeedMultiplier: 1
+  walkSpeed: 0.8
+  runSpeed: 1
+  crouchSpeed: 0.4
+  fallSpeed: 0.5
+  aimSpeed: 0.3
   _jumpHeight: 1.5
   _gravity: -50
   _crouchHeight: 1
   _standingHeight: 2
-  _crouchSpeed: 1.2
   _pitch: 0
   _mouseSensitivity: 0.3
   _maxlookAngle: 60
+  weaponAnimation_Speed: 0
+  isGrounded: 0
+  isAimingIn: 0
 --- !u!143 &1204223776
 CharacterController:
   m_ObjectHideFlags: 0
@@ -843,11 +858,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!95 &1204223777 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 7c1e6507cc3cd564dbaa14e69027f1e9, type: 3}
-  m_PrefabInstance: {fileID: 215124054}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1204223778 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7c1e6507cc3cd564dbaa14e69027f1e9, type: 3}
@@ -1187,13 +1197,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a85317064fb8d5d4790db839c223f3e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapon_Controller
-  _camerTransform: {fileID: 1315544888}
-  _GunPos: {fileID: 864407120}
-  _gunFireError: 0
-  _gunDampMove: 0
-  _defaultYRot: -160
-  _gunSway: 0
-  _swayAmount: 2
+  playerController: {fileID: 0}
+  weaponAnimator: {fileID: 0}
+  currentWeapon: {fileID: 0}
+  lookrotationAmount: 3
+  MoveRotationAmount: 5
+  smoothSpeed: 15
+  xClampRotation: 15
+  yClampRotation: 15
+  zClampRotation: 15
+  WeaponSwayObject: {fileID: 0}
+  swayAmountA: 1
+  swayAmountB: 2
+  swayScale: 600
+  swaylerpSpeed: 14
+  isAimingIn: 0
+  smoothTime: 0
+  ScopeCameraPosition: {fileID: 0}
+  AimOffset: 0
+  bulletPrefab: {fileID: 0}
+  BulletSpawnPoint: {fileID: 0}
+  fireRate: 0
+  currentFireRate: 0
+  isFiring: 0
 --- !u!1 &1983676930 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6007133747956470153, guid: be3ed9816d019ff4a85901f7a3aae376, type: 3}
