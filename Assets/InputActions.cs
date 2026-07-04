@@ -310,6 +310,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""4504e9c5-eefa-448f-b269-681b7446d20d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -356,6 +365,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Fire1Release"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""86839f5a-16c6-4bb5-8f52-4dd629f56eae"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -376,6 +396,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Weapon_Fire2Release = m_Weapon.FindAction("Fire2Release", throwIfNotFound: true);
         m_Weapon_Fire1Press = m_Weapon.FindAction("Fire1Press", throwIfNotFound: true);
         m_Weapon_Fire1Release = m_Weapon.FindAction("Fire1Release", throwIfNotFound: true);
+        m_Weapon_Reload = m_Weapon.FindAction("Reload", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -612,6 +633,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Weapon_Fire2Release;
     private readonly InputAction m_Weapon_Fire1Press;
     private readonly InputAction m_Weapon_Fire1Release;
+    private readonly InputAction m_Weapon_Reload;
     /// <summary>
     /// Provides access to input actions defined in input action map "Weapon".
     /// </summary>
@@ -639,6 +661,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Weapon/Fire1Release".
         /// </summary>
         public InputAction @Fire1Release => m_Wrapper.m_Weapon_Fire1Release;
+        /// <summary>
+        /// Provides access to the underlying input action "Weapon/Reload".
+        /// </summary>
+        public InputAction @Reload => m_Wrapper.m_Weapon_Reload;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -677,6 +703,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Fire1Release.started += instance.OnFire1Release;
             @Fire1Release.performed += instance.OnFire1Release;
             @Fire1Release.canceled += instance.OnFire1Release;
+            @Reload.started += instance.OnReload;
+            @Reload.performed += instance.OnReload;
+            @Reload.canceled += instance.OnReload;
         }
 
         /// <summary>
@@ -700,6 +729,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Fire1Release.started -= instance.OnFire1Release;
             @Fire1Release.performed -= instance.OnFire1Release;
             @Fire1Release.canceled -= instance.OnFire1Release;
+            @Reload.started -= instance.OnReload;
+            @Reload.performed -= instance.OnReload;
+            @Reload.canceled -= instance.OnReload;
         }
 
         /// <summary>
@@ -818,5 +850,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnFire1Release(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Reload" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnReload(InputAction.CallbackContext context);
     }
 }
