@@ -1,15 +1,14 @@
 using System;
-using Unity.Jobs;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Weapon_Controller : MonoBehaviour
 {
 
     [Header("Refferenc")]
-    [SerializeField] private Player_Controller playerController;
+    [SerializeField] Player_Controller playerController;
         bool isInitialized = false;
-    [SerializeField] private Animator weaponAnimator;
+    [SerializeField] Animator weaponAnimator;
+    [SerializeField] Camera camera;
     
 
     [Header("Setting")]
@@ -38,14 +37,22 @@ public class Weapon_Controller : MonoBehaviour
     Vector3 aimVelocity;
     Vector3 weaponAimPosition;
 
-    [Header("fireing")]
-    [SerializeField] GameObject bulletPrefab;
-    [SerializeField] Transform BulletSpawnPoint;
-    [SerializeField] float fireRate;
-    [SerializeField] float currentFireRate;
-    [SerializeField] bool isFiring;
+    //[Header("fireing")]
+    //[SerializeField] GameObject bulletPrefab;
+    //[SerializeField] Transform bulletSpawnPoint;
+    //[SerializeField] GameObject muzzleFlash;
+    //[SerializeField] Transform muzzleFlashSpawnPoint;
+    //[SerializeField] GameObject WallHit;
 
-   
+    //[SerializeField] Vector3 fireError = new Vector3(0.1f, 0.1f , 0.1f);
+    //[SerializeField] bool isFireErrorOn;
+
+    //[SerializeField] LayerMask shootLayer;     
+    //[SerializeField] float fireRate;
+    //[SerializeField] float currentFireRate;
+    //[SerializeField] bool isFiring;
+
+    
 
     Vector2 lookInput;
     Vector3 LookTarget = Vector3.zero;
@@ -75,8 +82,8 @@ public class Weapon_Controller : MonoBehaviour
      
     }
     private void OnDisable()
-    {    
-
+    {
+        
     }
 
     #endregion
@@ -90,17 +97,15 @@ public class Weapon_Controller : MonoBehaviour
         Sway_Look_Calculation();
         Sway_Idle_Calculation();
         isAiming_Calculation();
-        Shoot();
+        
         //Debug.Log(playerController.weaponAnimationMagnitude);
         weaponAnimator.SetFloat("Speed", playerController.weaponAnimation_Speed);
         weaponAnimator.SetBool("Sprinting" , InputManager.instance.isSprinting);
         weaponAnimator.SetBool("isGrounded", playerController.isGrounded);
+
     }
 
-    void LateUpdate()
-        {
-             
-        }
+   
 
     #region -isAiming calculation-
     void isAiming_Calculation()
@@ -130,8 +135,6 @@ public class Weapon_Controller : MonoBehaviour
     {
         lookInput = InputManager.instance.LookInput;
         MovementInput = InputManager.instance.MoveInput;
-
-
 
         LookTarget.x = lookInput.y * (isAimingIn ? lookrotationAmount / 4 : lookrotationAmount);
         LookTarget.y = -lookInput.x * (isAimingIn ? lookrotationAmount / 4 : lookrotationAmount);
@@ -189,20 +192,6 @@ public class Weapon_Controller : MonoBehaviour
 
     #endregion
 
-    #region
-    void Shoot()
-    {
-        isFiring = InputManager.instance.isFiring;
-        if (isFiring)
-        {
-            if(currentFireRate > fireRate)
-            {
-                var other = Instantiate(bulletPrefab, BulletSpawnPoint.position , Quaternion.identity);
-                currentFireRate = 0;
-            }
-            currentFireRate += Time.deltaTime;
-        }
-    }
-    #endregion
+   
 
-}
+}   

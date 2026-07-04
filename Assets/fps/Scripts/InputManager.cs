@@ -45,6 +45,8 @@ public class InputManager : MonoBehaviour
         input.Weapon.Fire1Press.performed += e => isFiring = true;
         input.Weapon.Fire1Release.performed += e => isFiring = false;
 
+        input.Weapon.Reload.performed += Reload_performed;
+
         input.Enable();
     }
 
