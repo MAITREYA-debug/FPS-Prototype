@@ -79,15 +79,6 @@ public class Player_Controller : MonoBehaviour
         offset = defaultCamerapos - characterController.center;
     }
 
-    void OnEnable()
-    {
-        InputManager.OnJump += jump;
-    }
-
-    void OnDisable()
-    {
-        InputManager.OnJump -= jump;
-    }
 
     void Update()
     {
@@ -101,8 +92,21 @@ public class Player_Controller : MonoBehaviour
         HandleMovement();
         HandleLook();
         HandleCrouch();
+    } 
+
+    #region - Enable/Disable -
+    void OnEnable()
+    {
+        InputManager.OnJump += jump;
     }
 
+    void OnDisable()
+    {
+        InputManager.OnJump -= jump;
+    }
+#endregion
+
+    #region - Movement -
     void StateManager()
     {
         Vector2 moveInput = InputManager.instance.MoveInput;
@@ -144,7 +148,9 @@ public class Player_Controller : MonoBehaviour
                 break;
         }
     }
+    #endregion
 
+    #region - Movement -
     void HandleMovement()
     {
         currentSpeed = speed * currentSpeedMultiplier;
@@ -178,7 +184,9 @@ public class Player_Controller : MonoBehaviour
             weaponAnimation_Speed = 0f;
         }
     }
+    #endregion
 
+    #region - Look -
     void HandleLook()
     {
         Vector2 mouseInput = InputManager.instance.LookInput * _mouseSensitivity;
@@ -189,7 +197,9 @@ public class Player_Controller : MonoBehaviour
         _pitch = Mathf.Clamp(_pitch, -_maxlookAngle, _maxlookAngle);
         cameraHolder.localRotation = Quaternion.Euler(_pitch, 0, 0);
     }
+    #endregion
 
+    #region - Crouch -
     void HandleCrouch()
     {
         float targetHeight = _isCrouching ? _crouchHeight : _standingHeight;
@@ -202,7 +212,9 @@ public class Player_Controller : MonoBehaviour
 
         cameraHolder.localPosition = center + offset;
     }
+    #endregion
 
+    #region - jump -
     void jump()
     {
         _jump = true;
@@ -242,4 +254,6 @@ public class Player_Controller : MonoBehaviour
 
         wasGrounded = isGrounded;
     }
+
+    #endregion
 }
