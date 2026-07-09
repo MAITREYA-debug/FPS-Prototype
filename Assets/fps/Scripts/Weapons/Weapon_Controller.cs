@@ -73,6 +73,9 @@ public class Weapon_Controller : MonoBehaviour
         }
     }
 
+    #region - Aiming -
+  
+
     void isAiming_Calculation()
     {
         bool isAimingIn = InputManager.instance.isAimingIn;
@@ -94,7 +97,10 @@ public class Weapon_Controller : MonoBehaviour
         weaponAimPosition = Vector3.SmoothDamp(weaponAimPosition, target, ref aimVelocity, smoothTime);
         WeaponSwayObject.transform.position = weaponAimPosition + swayPosition;
     }
+    #endregion
 
+    #region - Sway_Look -
+    
     void Sway_Look_Calculation()
     {
         bool isAimingIn = InputManager.instance.isAimingIn;
@@ -120,7 +126,9 @@ public class Weapon_Controller : MonoBehaviour
 
         transform.localRotation = Quaternion.Slerp(transform.localRotation, newTarget, smoothSpeed * Time.deltaTime);
     }
+    #endregion
 
+    #region - Sway idle -
     void Sway_Idle_Calculation()
     {
         bool isAimingIn = InputManager.instance.isAimingIn;
@@ -141,6 +149,9 @@ public class Weapon_Controller : MonoBehaviour
         return new Vector3(Mathf.Sin(Time), A * Mathf.Sin(B * Time + Mathf.PI));
     }
 
+    #endregion
+
+    #region - jump Events -
     public void onjump()
     {
         weaponAnimator?.SetTrigger("OnJump");
@@ -155,4 +166,5 @@ public class Weapon_Controller : MonoBehaviour
     {
         weaponAnimator?.SetTrigger("OnLanding");
     }
+    #endregion
 }
