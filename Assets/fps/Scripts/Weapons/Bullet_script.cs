@@ -3,36 +3,41 @@ using UnityEngine;
 
 public class Bullet_script : MonoBehaviour
 {
-    public float lifeTime = 1;
+    [SerializeField] float lifeTime = 1f;
     [SerializeField] float speed = 200f;
+    [SerializeField] float arrivalThreshold = 0.05f;
 
+    TrailRenderer trailRenderer;
 
-
-    private void Awake()
-    {    
-       
+    void Awake()
+    {
+        trailRenderer = GetComponent<TrailRenderer>();
     }
 
     public void Initialize(Vector3 hitPoint)
     {
-        transform.GetComponent<TrailRenderer>().Clear();
+        trailRenderer?.Clear();
+        StopAllCoroutines();
         StartCoroutine(BulletMove(hitPoint));
     }
 
-
     IEnumerator BulletMove(Vector3 target)
     {
-        yield return null;
+        float elapsed = 0f;
 
-        while (Vector3.Distance(transform.position, target) > 0.05f)
+        while (Vector3.Distance(transform.position, target) > arrivalThreshold)
         {
             transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
-            Debug.Log("corutine for bullet");
+            elapsed += Time.deltaTime;
+
+            if (elapsed >= lifeTime)
+            {
+                break;
+            }
+
             yield return null;
         }
-        Destroy(gameObject,lifeTime);
 
-
+        Destroy(gameObject);
     }
-    
 }

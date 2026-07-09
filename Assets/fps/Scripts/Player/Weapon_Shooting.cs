@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using static System.Net.WebRequestMethods;
 
 public class Weapon_Shooting : MonoBehaviour
 {
@@ -10,110 +9,139 @@ public class Weapon_Shooting : MonoBehaviour
     [SerializeField] Animator animator;
     [SerializeField] TextMeshProUGUI AmmoTxt;
 
-    [Header("fireing")]
-    [SerializeField] GameObject bulletPrefab;    
+    [Header("Firing")]
+    [SerializeField] GameObject bulletPrefab;
     [SerializeField] GameObject muzzleFlash;
     [SerializeField] GameObject HitVisual;
 
     [SerializeField] Transform muzzleFlashSpawnPoint;
     [SerializeField] LayerMask shootLayer;
-    
 
-    [SerializeField] float fireRate;
+    [SerializeField] float fireRate = 0.2f;
     [SerializeField] float errorRange = 0.5f;
+    [SerializeField] float maxShootDistance = 100f;
 
     [SerializeField] int magzineSize = 9;
     [SerializeField] int CurrentBullets;
 
-
-
     float currentFireRate;
-    bool isFiring;
-    bool isFireErrorOn;
-    Vector3 firingErrorOffset;
-    void Start()
+    bool isReloading;
+
+    void Awake()
     {
-        CurrentBullets = 9 ;
+        CurrentBullets = magzineSize;
+        UpdateAmmoDisplay();
     }
 
-   
     void Update()
     {
-        Shoot();
+        if (InputManager.instance == null || isReloading)
+        {
+            return;
+        }
 
+        Shoot();
+        currentFireRate += Time.deltaTime;
     }
 
-    private void OnEnable()
+    void OnEnable()
     {
         InputManager.OnReload += Reload;
     }
 
-   
-
-    private void OnDisable()
+    void OnDisable()
     {
         InputManager.OnReload -= Reload;
     }
 
-    #region - shooting -
     void Shoot()
     {
-        isFiring = InputManager.instance.isFiring;
-        isFireErrorOn = (playerController.weaponAnimation_Speed > 0.1f ? true : false);
-        if (isFiring & CurrentBullets > 0)
+        if (!InputManager.instance.isFiring || CurrentBullets <= 0)
         {
-                
-            if (currentFireRate > fireRate)
-            {
-
-                animator.SetTrigger("fire");
-                currentFireRate = 0;
-                CurrentBullets--;
-                AmmoTxt.SetText("" + CurrentBullets);
-
-                if (isFireErrorOn) firingErrorOffset = new Vector3(Random.Range(-errorRange, errorRange), Random.Range(-errorRange, errorRange), 0);
-                else firingErrorOffset = Vector3.zero;
-
-
-                // randomize ray direction so it can be in error if is firingErroron
-                var origin = camera.ScreenPointToRay(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0) + firingErrorOffset);
-                var dir = transform.forward;
-                RaycastHit hit;
-
-                var flash = Instantiate(muzzleFlash, muzzleFlashSpawnPoint.position, muzzleFlashSpawnPoint.rotation);
-                flash.transform.SetParent(muzzleFlashSpawnPoint.transform);
-                Destroy(flash, 1f);
-
-                
-
-                Bullet_script bullet = Instantiate(bulletPrefab, muzzleFlashSpawnPoint.position, Quaternion.identity).GetComponent<Bullet_script>();
-                if (Physics.Raycast(origin, out hit, 50f, shootLayer))
-                {
-                    var hiteffect = Instantiate(HitVisual, hit.point, Quaternion.LookRotation(hit.normal));
-                    Destroy(hiteffect, 10f);
-                    
-                    Debug.Log(hit.point);
-                    bullet.Initialize(hit.point);
-
-
-                }
-                else
-                {
-                    bullet.Initialize(origin.origin + origin.direction * 100f);
-                }
-
-            }
+            return;
         }
-        currentFireRate += Time.deltaTime;
-    }
-    #endregion
 
+        if (currentFireRate < fireRate)
+        {
+            return;
+        }
+
+        if (bulletPrefab == null || muzzleFlashSpawnPoint == null || camera == null)
+        {
+            return;
+        }
+
+        currentFireRate = 0f;
+        CurrentBullets--;
+        UpdateAmmoDisplay();
+
+        bool applySpread = playerController != null && playerController.weaponAnimation_Speed > 0.1f;
+        Ray ray = BuildAimRay(applySpread);
+
+        animator?.SetTrigger("fire");
+
+        if (muzzleFlash != null)
+        {
+            var flash = Instantiate(muzzleFlash, muzzleFlashSpawnPoint.position, muzzleFlashSpawnPoint.rotation, muzzleFlashSpawnPoint);
+            Destroy(flash, 1f);
+        }
+
+        Bullet_script bullet = Instantiate(bulletPrefab, muzzleFlashSpawnPoint.position, Quaternion.identity)
+            .GetComponent<Bullet_script>();
+
+        if (bullet == null)
+        {
+            return;
+        }
+
+        if (Physics.Raycast(ray, out RaycastHit hit, maxShootDistance, shootLayer))
+        {
+            if (HitVisual != null)
+            {
+                var hitEffect = Instantiate(HitVisual, hit.point, Quaternion.LookRotation(hit.normal));
+                Destroy(hitEffect, 10f);
+            }
+
+            bullet.Initialize(hit.point);
+        }
+        else
+        {
+            bullet.Initialize(ray.origin + ray.direction * maxShootDistance);
+        }
+    }
+
+    Ray BuildAimRay(bool applySpread)
+    {
+        float spreadX = 0f;
+        float spreadY = 0f;
+
+        if (applySpread && errorRange > 0f)
+        {
+            spreadX = (Random.value - 0.5f) * 2f * errorRange / Screen.width;
+            spreadY = (Random.value - 0.5f) * 2f * errorRange / Screen.height;
+        }
+
+        return camera.ViewportPointToRay(new Vector3(0.5f + spreadX, 0.5f + spreadY, 0f));
+    }
 
     void Reload()
     {
-        Debug.Log("reload called");
+        if (CurrentBullets >= magzineSize)
+        {
+            return;
+        }
+
+        isReloading = true;
         CurrentBullets = magzineSize;
-        AmmoTxt.SetText("" + CurrentBullets);
+        UpdateAmmoDisplay();
+        isReloading = false;
     }
 
+    void UpdateAmmoDisplay()
+    {
+        if (AmmoTxt != null)
+        {
+            AmmoTxt.SetText(CurrentBullets.ToString());
+        }
+    }
 }
