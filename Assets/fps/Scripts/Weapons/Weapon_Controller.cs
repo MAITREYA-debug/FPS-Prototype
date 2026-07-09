@@ -3,15 +3,15 @@ using UnityEngine;
 
 public class Weapon_Controller : MonoBehaviour
 {
-
-    [Header("Refferenc")]
+    [Header("Reference")]
     [SerializeField] Player_Controller playerController;
-        bool isInitialized = false;
-    [SerializeField] Animator weaponAnimator;
-    [SerializeField] Camera camera;
-    
+    bool isInitialized;
 
-    [Header("Setting")]
+    [SerializeField] Animator weaponAnimator;
+    [SerializeField] Transform WeaponSwayObject;
+    [SerializeField] Transform ScopeCameraPosition;
+
+    [Header("Sway")]
     [SerializeField] float lookrotationAmount = 3f;
     [SerializeField] float MoveRotationAmount = 5f;
     [SerializeField] float smoothSpeed = 15f;
@@ -21,51 +21,29 @@ public class Weapon_Controller : MonoBehaviour
     [SerializeField] float zClampRotation = 15f;
 
     [Header("Weapon Breathing")]
-    [SerializeField]  Transform WeaponSwayObject;
-    [SerializeField]  float swayAmountA = 1;
-    [SerializeField]  float swayAmountB = 2;
-    [SerializeField]  float swayScale = 600;
-    [SerializeField]  float swaylerpSpeed = 14;
+    [SerializeField] float swayAmountA = 1f;
+    [SerializeField] float swayAmountB = 2f;
+    [SerializeField] float swayScale = 600f;
+    [SerializeField] float swaylerpSpeed = 14f;
+
+    [Header("Aiming")]
+    [SerializeField] float smoothTime = 0.1f;
+    public float AimOffset;
+
     Vector3 swayPosition;
     float swayTime;
-
-    [Header("AimingIn")]
-    [SerializeField] bool isAimingIn;
-    [SerializeField] float smoothTime;
-    [SerializeField] Transform ScopeCameraPosition;
-    public float AimOffset;
     Vector3 aimVelocity;
     Vector3 weaponAimPosition;
 
-    //[Header("fireing")]
-    //[SerializeField] GameObject bulletPrefab;
-    //[SerializeField] Transform bulletSpawnPoint;
-    //[SerializeField] GameObject muzzleFlash;
-    //[SerializeField] Transform muzzleFlashSpawnPoint;
-    //[SerializeField] GameObject WallHit;
-
-    //[SerializeField] Vector3 fireError = new Vector3(0.1f, 0.1f , 0.1f);
-    //[SerializeField] bool isFireErrorOn;
-
-    //[SerializeField] LayerMask shootLayer;     
-    //[SerializeField] float fireRate;
-    //[SerializeField] float currentFireRate;
-    //[SerializeField] bool isFiring;
-
-    
-
     Vector2 lookInput;
     Vector3 LookTarget = Vector3.zero;
- 
+
     Vector2 MovementInput;
-    Vector3 MoveTarget  = Vector3.zero;
-    
+    Vector3 MoveTarget = Vector3.zero;
+
     Quaternion newTarget;
 
-
-
-
-    private void Awake()
+    void Awake()
     {
         weaponAnimator = GetComponentInChildren<Animator>();
     }
@@ -76,122 +54,105 @@ public class Weapon_Controller : MonoBehaviour
         isInitialized = true;
     }
 
-    #region - onEnable/ OnDisable -
-    private void OnEnable()
-    {      
-     
-    }
-    private void OnDisable()
+    void Update()
     {
-        
-    }
-
-    #endregion
-
-    private void Update()
-    {
-        if (!isInitialized)
+        if (!isInitialized || InputManager.instance == null || playerController == null)
         {
             return;
         }
+
         Sway_Look_Calculation();
         Sway_Idle_Calculation();
         isAiming_Calculation();
-        
-        //Debug.Log(playerController.weaponAnimationMagnitude);
-        weaponAnimator.SetFloat("Speed", playerController.weaponAnimation_Speed);
-        weaponAnimator.SetBool("Sprinting" , InputManager.instance.isSprinting);
-        weaponAnimator.SetBool("isGrounded", playerController.isGrounded);
 
+        if (weaponAnimator != null)
+        {
+            weaponAnimator.SetFloat("Speed", playerController.weaponAnimation_Speed);
+            weaponAnimator.SetBool("Sprinting", InputManager.instance.isSprinting);
+            weaponAnimator.SetBool("isGrounded", playerController.isGrounded);
+        }
     }
 
-   
-
-    #region -isAiming calculation-
     void isAiming_Calculation()
     {
-        isAimingIn = InputManager.instance.isAimingIn;
-
+        bool isAimingIn = InputManager.instance.isAimingIn;
         Vector3 target = transform.position;
 
-        if (isAimingIn){
+        if (isAimingIn && WeaponSwayObject != null && ScopeCameraPosition != null)
+        {
+            target = playerController.cameraHolder.transform.position
+                + (WeaponSwayObject.transform.position - ScopeCameraPosition.position)
+                + playerController.cameraHolder.transform.forward * AimOffset;
+        }
 
-            target = playerController.cameraHolder.transform.position 
-                + (WeaponSwayObject.transform.position - ScopeCameraPosition.position) 
-                + playerController.cameraHolder.transform.forward * AimOffset;        
-        
+        if (WeaponSwayObject == null)
+        {
+            return;
         }
 
         weaponAimPosition = WeaponSwayObject.transform.position;
         weaponAimPosition = Vector3.SmoothDamp(weaponAimPosition, target, ref aimVelocity, smoothTime);
-
         WeaponSwayObject.transform.position = weaponAimPosition + swayPosition;
     }
 
-    #endregion
-
-    #region - Sway Look Cal -
     void Sway_Look_Calculation()
     {
+        bool isAimingIn = InputManager.instance.isAimingIn;
         lookInput = InputManager.instance.LookInput;
         MovementInput = InputManager.instance.MoveInput;
 
-        LookTarget.x = lookInput.y * (isAimingIn ? lookrotationAmount / 4 : lookrotationAmount);
-        LookTarget.y = -lookInput.x * (isAimingIn ? lookrotationAmount / 4 : lookrotationAmount);
-        LookTarget.z = -lookInput.x / 2;
+        float lookMultiplier = isAimingIn ? lookrotationAmount / 4f : lookrotationAmount;
+        float moveMultiplier = isAimingIn ? MoveRotationAmount / 4f : MoveRotationAmount;
 
-        MoveTarget.z = MovementInput.x * (isAimingIn ? MoveRotationAmount / 4 : MoveRotationAmount);
-        MoveTarget.x = -MovementInput.y * (isAimingIn ? MoveRotationAmount / 4 : MoveRotationAmount);
+        LookTarget.x = lookInput.y * lookMultiplier;
+        LookTarget.y = -lookInput.x * lookMultiplier;
+        LookTarget.z = -lookInput.x / 2f;
+
+        MoveTarget.z = MovementInput.x * moveMultiplier;
+        MoveTarget.x = -MovementInput.y * moveMultiplier;
 
         Vector3 target = LookTarget + MoveTarget;
 
-        newTarget = Quaternion.Euler(Math.Clamp(target.x, -xClampRotation, xClampRotation),
-                Math.Clamp(target.y, -yClampRotation, yClampRotation),
-                Math.Clamp(target.z, -zClampRotation, zClampRotation));
+        newTarget = Quaternion.Euler(
+            Math.Clamp(target.x, -xClampRotation, xClampRotation),
+            Math.Clamp(target.y, -yClampRotation, yClampRotation),
+            Math.Clamp(target.z, -zClampRotation, zClampRotation));
 
         transform.localRotation = Quaternion.Slerp(transform.localRotation, newTarget, smoothSpeed * Time.deltaTime);
     }
 
-    #endregion
-
-    #region - Sway Idle Calculation - 
-    private void Sway_Idle_Calculation()
-    { 
-        var targetPos = LissajousCurve(swayTime, swayAmountA, swayAmountB) / ( isAimingIn ? swayScale * 4: swayScale) ;
+    void Sway_Idle_Calculation()
+    {
+        bool isAimingIn = InputManager.instance.isAimingIn;
+        float scale = isAimingIn ? swayScale * 4f : swayScale;
+        var targetPos = LissajousCurve(swayTime, swayAmountA, swayAmountB) / scale;
 
         swayTime += Time.deltaTime;
-        if (swayTime > 6.3f) swayTime = 0;
+        if (swayTime > 6.3f)
+        {
+            swayTime = 0f;
+        }
 
         swayPosition = Vector3.Lerp(swayPosition, targetPos, Time.deltaTime * swaylerpSpeed);
-        //WeaponSwayObject.localPosition = swayPosition;
     }
-    private Vector3 LissajousCurve(float Time, float A, float B)
+
+    Vector3 LissajousCurve(float Time, float A, float B)
     {
         return new Vector3(Mathf.Sin(Time), A * Mathf.Sin(B * Time + Mathf.PI));
     }
 
-    #endregion
-
-    #region - jumpevents -
-
     public void onjump()
     {
-        weaponAnimator.SetTrigger("OnJump");
-       
-    } 
+        weaponAnimator?.SetTrigger("OnJump");
+    }
 
-   public void Falling()
+    public void Falling()
     {
-        weaponAnimator.SetTrigger("Falling");
+        weaponAnimator?.SetTrigger("Falling");
     }
 
     public void OnLanding()
     {
-        weaponAnimator.SetTrigger("OnLanding");
+        weaponAnimator?.SetTrigger("OnLanding");
     }
-
-    #endregion
-
-   
-
-}   
+}
