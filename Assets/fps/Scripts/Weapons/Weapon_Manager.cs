@@ -21,12 +21,7 @@ public class Weapon_Manager : MonoBehaviour
 
     [SerializeField] int currentWeaponId = 0;
     [SerializeField] int selectedWeaponId = 0;
-
-
     Transform WeaponPosition;
-
-
-    
 
   
     
