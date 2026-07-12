@@ -91,9 +91,7 @@ public class Weapon_Shooting : MonoBehaviour
         }
 
         Bullet_script bullet = Instantiate(bulletPrefab, muzzleFlashSpawnPoint.position, Quaternion.identity)
-            .GetComponent<Bullet_script>();
-
-        if (bullet == null) return; 
+            .GetComponent<Bullet_script>();        
 
         if (Physics.Raycast(ray, out RaycastHit hit, maxShootDistance, shootLayer))
         {

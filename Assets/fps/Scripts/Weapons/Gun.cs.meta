@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: b0672beead81fe34b8c2c5df1e6eae1c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - gunData: {instanceID: 0}
+  - playerController: {instanceID: 0}
+  - camera: {instanceID: 0}
+  - AmmoTxt: {instanceID: 0}
+  - bulletPrefab: {fileID: 4267073684437714169, guid: dee6103b168848741b030445982bf62f, type: 3}
+  - muzzleFlash: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
+  - hitImpact: {fileID: 1557088843730042366, guid: 15cd8708b1b7b4a47be1dfbf9f9ed794, type: 3}
+  - muzzleFlashSpawnPoint: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
