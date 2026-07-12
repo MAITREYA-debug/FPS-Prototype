@@ -15,16 +15,29 @@ public class Weapon_Manager : MonoBehaviour
         Controlls animation here
     */
 
+
+    [Header("Reference")]
+    [SerializeField] Player_Controller playercontroller;
+    [SerializeField] Weapon_Controller weaponContoller;
+    [SerializeField] Weapon_Shooting weaponShooting;
+    [SerializeField] Animator WeaponAnimation;
+    [SerializeField] Animator playerAnimation;
+
+
+
     [SerializeField] WeaponType currentWeaponType;
     [SerializeField] List<GameObject> WeaponPool = new List<GameObject>();
-    [SerializeField] Dictionary<int , GameObject> weapons = new Dictionary<int , GameObject>();
+    [SerializeField] Dictionary<int , Gun> weapons = new Dictionary<int , Gun>();
 
     [SerializeField] int currentWeaponId = 0;
     [SerializeField] int selectedWeaponId = 0;
+    [SerializeField] Gun CurrentWeaponobj;
+    [SerializeField] Gun SelectedWeaponobj;
+
     Transform WeaponPosition;
 
-  
-    
+
+
 
 
     enum WeaponType
@@ -34,18 +47,21 @@ public class Weapon_Manager : MonoBehaviour
 
     private void Awake()
     {
-      
+
     }
 
 
     private void Update()
     {
-        if(currentWeaponId == selectedWeaponId)
-        {
-            return;
-        }
 
-       
+        if(selectedWeaponId == currentWeaponId) { return; }
+
+        SelectedWeaponobj = weapons[selectedWeaponId];
+
+        Destroy(CurrentWeaponobj.gameObject);
+        var obj = Instantiate(SelectedWeaponobj);
+
+
 
     }
 

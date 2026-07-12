@@ -19,6 +19,7 @@ public class InputManager : MonoBehaviour
     public static event Action OnJump;
     public static event Action OnInteract;
     public static event Action OnReload;
+    public static event Action OnFire;
 
     private void Awake()
     {
@@ -44,12 +45,15 @@ public class InputManager : MonoBehaviour
         input.Weapon.Fire2Release.performed += _ => isAimingIn = false;
 
         input.Weapon.Fire1Press.performed += _ => isFiring = true;
+        input.Weapon.Fire1Press.performed += Fire1Press_performed;
         input.Weapon.Fire1Release.performed += _ => isFiring = false;
 
         input.Weapon.Reload.performed += Reload_performed;
 
         input.Enable();
     }
+
+   
 
     private void OnDestroy()
     {
@@ -76,5 +80,9 @@ public class InputManager : MonoBehaviour
     private void Jump_performed(InputAction.CallbackContext obj)
     {
         OnJump?.Invoke();
+    } 
+    private void Fire1Press_performed(InputAction.CallbackContext obj)
+    {
+        OnFire?.Invoke();
     }
 }

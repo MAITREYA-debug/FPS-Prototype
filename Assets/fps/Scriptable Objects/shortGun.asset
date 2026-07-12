@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c08c3a7fd0c0d084090fe3b7a24e08d2, type: 3}
+  m_Name: shortGun
+  m_EditorClassIdentifier: Assembly-CSharp::GunData
+  gunId: 103
+  name: ShortGun
+  shootlayer:
+    serializedVersion: 2
+    m_Bits: 0
+  magzine: 6
+  reloadTime: 1.5
+  FireRate: 0.6
+  ErrorRange: 10
+  MaxTravelDistance: 40
+  swayScale: 5000
+  moveRotationAmount: 3
+  lookRotationAmount: 5
+  smoothSpeed: 4
