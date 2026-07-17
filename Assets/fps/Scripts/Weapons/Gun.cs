@@ -48,17 +48,10 @@ public abstract class Gun : MonoBehaviour
     {
         fireDelayCounter += Time.deltaTime;
 
-        if (!InputManager.instance.isFiring || currentBullets <= 0)
-        {
-            return;
-        }
+        if (!InputManager.instance.isFiring || currentBullets <= 0) return;
 
-        if (fireDelayCounter < gunData.FireRate)
-        {
-            return;
-        }       
+        if (fireDelayCounter < gunData.FireRate) return;
       
-
         if (isReloading) return;
 
         shoot();
@@ -113,6 +106,4 @@ public abstract class Gun : MonoBehaviour
             AmmoTxt.SetText(currentBullets.ToString());
         }
     }
-
-
 }

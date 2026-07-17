@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AdaptivePerformance;
 
@@ -14,6 +15,8 @@ public class Weapon_Manager : MonoBehaviour
         Know which gun can be removed and which cannot 
         Controlls animation here
     */
+
+    public static Weapon_Manager instance { get; private set; }
 
     [Header("Reference")]
     [SerializeField] Player_Controller playercontroller;
@@ -40,7 +43,7 @@ public class Weapon_Manager : MonoBehaviour
     Transform WeaponPosition;
 
 
-    enum WeaponType
+    public enum WeaponType
     {
         primary = 1, 
         secondary, 
@@ -50,27 +53,24 @@ public class Weapon_Manager : MonoBehaviour
     private void OnEnable()
     {
         InputManager.OnWeaponSelected += HandleWeaponSelected;
+        
+        //InputManager.onDrop += Drop_Weapon;
     }
+
+    
+
     private void OnDisable()
     {
         InputManager.OnWeaponSelected -= HandleWeaponSelected;
+        
+        //InputManager.onDrop -= Drop_Weapon;
     }
 
-    private void HandleWeaponSelected(int weaponId)
-    {
-        // Handle the weapon selection logic here
-
-        if((int)currentWeaponType == weaponId)
-        {
-            return;
-        }
-        currentWeaponType = (WeaponType)weaponId;
-    }
+   
 
     private void Awake()
     {
-        //    playercontroller = GetComponent<Player_Controller>();
-        //    weaponContoller = GetComponent<Weapon_Controller>();
+        
 
         selectedWeaponId = primaryId;
         currentWeaponId = selectedWeaponId;
@@ -120,7 +120,9 @@ public class Weapon_Manager : MonoBehaviour
         { 
             SelectId();
         }
+
         currentWeaponId = CurrentWeaponobj.gunData.gunId;
+
     }
 
     void SelectId()
@@ -128,9 +130,7 @@ public class Weapon_Manager : MonoBehaviour
         if(100 >= selectedWeaponId &&  selectedWeaponId <= 200)
         {
 
-        }
-
-               
+        }               
             Debug.Log("Weapon Changed");            
             currentWeaponId = selectedWeaponId;
 
@@ -140,6 +140,52 @@ public class Weapon_Manager : MonoBehaviour
             currentWeaponId = selectedWeaponId;
         
     }
+    private void HandleWeaponSelected(int weaponId)
+    {
 
+
+        if ((int)currentWeaponType == weaponId)
+        {
+            return;
+        }
+        currentWeaponType = (WeaponType)weaponId;
+    }
+
+    public void PickUp_Weapon(Gun weapon)
+    {
+       currentWeaponType =  CheckWeaponType(weapon.gunData.gunId);
+
+    }
+
+    public void Drop_Weapon(Gun dropWeapon)
+    {
+       var obj = Instantiate(dropWeapon.gameObject, playercontroller.transform.position + playercontroller.transform.forward * 2, Quaternion.identity);
+
+    }
+
+
+    public WeaponType CheckWeaponType(int id)
+    {
+        WeaponType temp;
+
+        if(id >100 && id <200) // primary
+        {
+            temp = WeaponType.primary;
+            primaryId = id;
+        }
+        else if (id <100 && id > 10)// secondary
+        {
+            temp = WeaponType.secondary;
+            secondaryId = id;
+        }
+        else // melee
+        {
+            temp = WeaponType.melee;
+            meleeId = id;
+        }
+
+        return temp;
+
+    }
 
 }

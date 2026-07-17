@@ -5,6 +5,7 @@ public class Player_Controller : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private CharacterController characterController;
+    [SerializeField] private Camera camera;
     [SerializeField] public Transform cameraHolder;
     [SerializeField] private Weapon_Controller weapon_Controller;
 
@@ -58,19 +59,25 @@ public class Player_Controller : MonoBehaviour
     void Awake()
     {
         weapon_Controller = GetComponentInChildren<Weapon_Controller>();
-        if (weapon_Controller != null)
+        if (weapon_Controller == null)
         {
-            weapon_Controller.Initialization(this);
+            Debug.LogWarning($"{nameof(Player_Controller)} could not find {nameof(Weapon_Controller)} in children.", this);
         }
         else
         {
-            Debug.LogWarning($"{nameof(Player_Controller)} could not find {nameof(Weapon_Controller)} in children.", this);
+            weapon_Controller.Initialization(this);
         }
 
         characterController = GetComponent<CharacterController>();
         if (characterController == null)
         {
             Debug.LogError($"{nameof(CharacterController)} is missing.", this);
+        }
+
+        camera = this.GetComponentInChildren<Camera>();
+        if(camera == null)
+        {
+            Debug.LogError($"{nameof(Camera)} is missing.", this);
         }
 
         currentSpeed = walkSpeed;
@@ -98,11 +105,13 @@ public class Player_Controller : MonoBehaviour
     void OnEnable()
     {
         InputManager.OnJump += jump;
+        InputManager.onPickup += WeaponPickInteraction;
     }
 
     void OnDisable()
     {
         InputManager.OnJump -= jump;
+        InputManager.onPickup -= WeaponPickInteraction;
     }
 #endregion
 
@@ -256,4 +265,23 @@ public class Player_Controller : MonoBehaviour
     }
 
     #endregion
+
+
+    public void WeaponPickInteraction()
+    {
+        Ray ray = camera.ViewportPointToRay(new Vector3(0.5f , 0.5f , 0f));
+        
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 4f , LayerMask.GetMask("Player")))
+        {
+            Debug.Log("weapon pickup hit" + hit.collider.name);
+            var obj = hit.collider.GetComponent<Gun>();
+
+            if (obj != null)
+            {
+                Weapon_Manager.instance.PickUp_Weapon(obj);
+                Destroy(obj.gameObject);
+            }
+        }
+    }
 }

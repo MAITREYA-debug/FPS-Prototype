@@ -60,20 +60,9 @@ public class Weapon_Shooting : MonoBehaviour
     #region - shoot -
     void Shoot()
     {
-        if (!InputManager.instance.isFiring || CurrentBullets <= 0)
-        {
-            return;
-        }
-
-        if (currentFireRate < fireRate)
-        {
-            return;
-        }
-
-        if (bulletPrefab == null || muzzleFlashSpawnPoint == null || camera == null)
-        {
-            return;
-        }
+        if (!InputManager.instance.isFiring || CurrentBullets <= 0 || bulletPrefab == null || muzzleFlashSpawnPoint == null || camera == null) return;
+        if (currentFireRate < fireRate) return; 
+        
 
         currentFireRate = 0f;
         CurrentBullets--;
@@ -151,4 +140,18 @@ public class Weapon_Shooting : MonoBehaviour
     }
 
     #endregion
+
+
+    void WeaponPickInteraction()
+    {
+        Ray ray = BuildAimRay(false);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, maxShootDistance, shootLayer))
+        {
+            if (hitImpact != null)
+            {
+               
+            }           
+        }
+    }
 }
