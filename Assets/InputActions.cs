@@ -346,6 +346,24 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""WeaponPickUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""2cb4d608-0020-4984-a89d-5af07e22d2b6"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""WeaponDrop"",
+                    ""type"": ""Button"",
+                    ""id"": ""f4d9f893-ba03-49b0-a0ef-bdb276b89a30"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -436,6 +454,28 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""MeleeSeleted"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""733dd05b-57ee-4150-aaa0-d38a0bd3facb"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponPickUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7be92d47-6756-46bf-927f-0bc879ae1bfd"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponDrop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -460,6 +500,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Weapon_PrimarySeleted = m_Weapon.FindAction("PrimarySeleted", throwIfNotFound: true);
         m_Weapon_SecondarySeleted = m_Weapon.FindAction("SecondarySeleted", throwIfNotFound: true);
         m_Weapon_MeleeSeleted = m_Weapon.FindAction("MeleeSeleted", throwIfNotFound: true);
+        m_Weapon_WeaponPickUp = m_Weapon.FindAction("WeaponPickUp", throwIfNotFound: true);
+        m_Weapon_WeaponDrop = m_Weapon.FindAction("WeaponDrop", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -700,6 +742,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Weapon_PrimarySeleted;
     private readonly InputAction m_Weapon_SecondarySeleted;
     private readonly InputAction m_Weapon_MeleeSeleted;
+    private readonly InputAction m_Weapon_WeaponPickUp;
+    private readonly InputAction m_Weapon_WeaponDrop;
     /// <summary>
     /// Provides access to input actions defined in input action map "Weapon".
     /// </summary>
@@ -743,6 +787,14 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Weapon/MeleeSeleted".
         /// </summary>
         public InputAction @MeleeSeleted => m_Wrapper.m_Weapon_MeleeSeleted;
+        /// <summary>
+        /// Provides access to the underlying input action "Weapon/WeaponPickUp".
+        /// </summary>
+        public InputAction @WeaponPickUp => m_Wrapper.m_Weapon_WeaponPickUp;
+        /// <summary>
+        /// Provides access to the underlying input action "Weapon/WeaponDrop".
+        /// </summary>
+        public InputAction @WeaponDrop => m_Wrapper.m_Weapon_WeaponDrop;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -793,6 +845,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @MeleeSeleted.started += instance.OnMeleeSeleted;
             @MeleeSeleted.performed += instance.OnMeleeSeleted;
             @MeleeSeleted.canceled += instance.OnMeleeSeleted;
+            @WeaponPickUp.started += instance.OnWeaponPickUp;
+            @WeaponPickUp.performed += instance.OnWeaponPickUp;
+            @WeaponPickUp.canceled += instance.OnWeaponPickUp;
+            @WeaponDrop.started += instance.OnWeaponDrop;
+            @WeaponDrop.performed += instance.OnWeaponDrop;
+            @WeaponDrop.canceled += instance.OnWeaponDrop;
         }
 
         /// <summary>
@@ -828,6 +886,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @MeleeSeleted.started -= instance.OnMeleeSeleted;
             @MeleeSeleted.performed -= instance.OnMeleeSeleted;
             @MeleeSeleted.canceled -= instance.OnMeleeSeleted;
+            @WeaponPickUp.started -= instance.OnWeaponPickUp;
+            @WeaponPickUp.performed -= instance.OnWeaponPickUp;
+            @WeaponPickUp.canceled -= instance.OnWeaponPickUp;
+            @WeaponDrop.started -= instance.OnWeaponDrop;
+            @WeaponDrop.performed -= instance.OnWeaponDrop;
+            @WeaponDrop.canceled -= instance.OnWeaponDrop;
         }
 
         /// <summary>
@@ -974,5 +1038,19 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMeleeSeleted(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "WeaponPickUp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnWeaponPickUp(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "WeaponDrop" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnWeaponDrop(InputAction.CallbackContext context);
     }
 }

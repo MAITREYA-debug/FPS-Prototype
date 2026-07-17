@@ -21,6 +21,8 @@ public class InputManager : MonoBehaviour
     public static event Action OnReload;
     public static event Action OnFire;
     public static event Action<int> OnWeaponSelected;
+    public static event Action onPickup;
+    public static event Action onDrop;
 
     private void Awake()
     {
@@ -61,6 +63,9 @@ public class InputManager : MonoBehaviour
         input.Weapon.SecondarySeleted.performed += _ => SelectWeapon(2);
         input.Weapon.MeleeSeleted.performed += _ => SelectWeapon(3);
 
+        input.Weapon.WeaponPickUp.performed += weaponPickup_performed;
+        input.Weapon.WeaponDrop.performed += weaponDrop_performed;
+
         input.Enable();
     }
 
@@ -100,5 +105,15 @@ public class InputManager : MonoBehaviour
     private void Fire1Press_performed(InputAction.CallbackContext obj)
     {
         OnFire?.Invoke();
+    }
+
+    private void weaponPickup_performed(InputAction.CallbackContext obj)
+    {
+        onPickup?.Invoke();
+    }
+
+    private void weaponDrop_performed(InputAction.CallbackContext obj)
+    {
+        onDrop?.Invoke();
     }
 }

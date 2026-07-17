@@ -9,15 +9,13 @@ public class Melee : Gun
 
     #region - onEnable/onDisable -
     void OnEnable()
-    {
-        InputManager.OnReload += tryReload;
+    {       
         InputManager.OnFire += Firepress;
     }
 
 
     void OnDisable()
-    {
-        InputManager.OnReload -= tryReload;
+    {       
         InputManager.OnFire -= Firepress;
     }
     #endregion
