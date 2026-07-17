@@ -319,6 +319,33 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PrimarySeleted"",
+                    ""type"": ""Button"",
+                    ""id"": ""741b0870-f88e-42c5-8eb6-50a4cb8505f6"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SecondarySeleted"",
+                    ""type"": ""Button"",
+                    ""id"": ""dbf2c8a2-03f5-45fb-ace5-d26698665719"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MeleeSeleted"",
+                    ""type"": ""Button"",
+                    ""id"": ""d1a78004-601b-422d-b8fe-4fcca9f76577"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -376,6 +403,39 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d7c40523-6a9e-4d93-a3c6-268d74f022c5"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PrimarySeleted"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7b425448-77cd-406f-9bf6-7984358b2437"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SecondarySeleted"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7ad7d8f7-1c98-4b34-8161-c8a307211252"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MeleeSeleted"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -397,6 +457,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Weapon_Fire1Press = m_Weapon.FindAction("Fire1Press", throwIfNotFound: true);
         m_Weapon_Fire1Release = m_Weapon.FindAction("Fire1Release", throwIfNotFound: true);
         m_Weapon_Reload = m_Weapon.FindAction("Reload", throwIfNotFound: true);
+        m_Weapon_PrimarySeleted = m_Weapon.FindAction("PrimarySeleted", throwIfNotFound: true);
+        m_Weapon_SecondarySeleted = m_Weapon.FindAction("SecondarySeleted", throwIfNotFound: true);
+        m_Weapon_MeleeSeleted = m_Weapon.FindAction("MeleeSeleted", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -634,6 +697,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Weapon_Fire1Press;
     private readonly InputAction m_Weapon_Fire1Release;
     private readonly InputAction m_Weapon_Reload;
+    private readonly InputAction m_Weapon_PrimarySeleted;
+    private readonly InputAction m_Weapon_SecondarySeleted;
+    private readonly InputAction m_Weapon_MeleeSeleted;
     /// <summary>
     /// Provides access to input actions defined in input action map "Weapon".
     /// </summary>
@@ -665,6 +731,18 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Weapon/Reload".
         /// </summary>
         public InputAction @Reload => m_Wrapper.m_Weapon_Reload;
+        /// <summary>
+        /// Provides access to the underlying input action "Weapon/PrimarySeleted".
+        /// </summary>
+        public InputAction @PrimarySeleted => m_Wrapper.m_Weapon_PrimarySeleted;
+        /// <summary>
+        /// Provides access to the underlying input action "Weapon/SecondarySeleted".
+        /// </summary>
+        public InputAction @SecondarySeleted => m_Wrapper.m_Weapon_SecondarySeleted;
+        /// <summary>
+        /// Provides access to the underlying input action "Weapon/MeleeSeleted".
+        /// </summary>
+        public InputAction @MeleeSeleted => m_Wrapper.m_Weapon_MeleeSeleted;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -706,6 +784,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Reload.started += instance.OnReload;
             @Reload.performed += instance.OnReload;
             @Reload.canceled += instance.OnReload;
+            @PrimarySeleted.started += instance.OnPrimarySeleted;
+            @PrimarySeleted.performed += instance.OnPrimarySeleted;
+            @PrimarySeleted.canceled += instance.OnPrimarySeleted;
+            @SecondarySeleted.started += instance.OnSecondarySeleted;
+            @SecondarySeleted.performed += instance.OnSecondarySeleted;
+            @SecondarySeleted.canceled += instance.OnSecondarySeleted;
+            @MeleeSeleted.started += instance.OnMeleeSeleted;
+            @MeleeSeleted.performed += instance.OnMeleeSeleted;
+            @MeleeSeleted.canceled += instance.OnMeleeSeleted;
         }
 
         /// <summary>
@@ -732,6 +819,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Reload.started -= instance.OnReload;
             @Reload.performed -= instance.OnReload;
             @Reload.canceled -= instance.OnReload;
+            @PrimarySeleted.started -= instance.OnPrimarySeleted;
+            @PrimarySeleted.performed -= instance.OnPrimarySeleted;
+            @PrimarySeleted.canceled -= instance.OnPrimarySeleted;
+            @SecondarySeleted.started -= instance.OnSecondarySeleted;
+            @SecondarySeleted.performed -= instance.OnSecondarySeleted;
+            @SecondarySeleted.canceled -= instance.OnSecondarySeleted;
+            @MeleeSeleted.started -= instance.OnMeleeSeleted;
+            @MeleeSeleted.performed -= instance.OnMeleeSeleted;
+            @MeleeSeleted.canceled -= instance.OnMeleeSeleted;
         }
 
         /// <summary>
@@ -857,5 +953,26 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnReload(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PrimarySeleted" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPrimarySeleted(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "SecondarySeleted" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSecondarySeleted(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MeleeSeleted" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMeleeSeleted(InputAction.CallbackContext context);
     }
 }
