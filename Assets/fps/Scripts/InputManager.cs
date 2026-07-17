@@ -20,6 +20,7 @@ public class InputManager : MonoBehaviour
     public static event Action OnInteract;
     public static event Action OnReload;
     public static event Action OnFire;
+    public static event Action<int> OnWeaponSelected;
 
     private void Awake()
     {
@@ -32,6 +33,9 @@ public class InputManager : MonoBehaviour
         instance = this;
         input = new InputActions();
 
+
+        // Player
+
         input.Player.Sprint.performed += _ => isSprinting = true;
         input.Player.Sprint.canceled += _ => isSprinting = false;
 
@@ -41,6 +45,9 @@ public class InputManager : MonoBehaviour
         input.Player.Jump.performed += Jump_performed;
         input.Player.Interact.performed += Interact_performed;
 
+
+
+        // Weapon
         input.Weapon.Fire2Press.performed += _ => isAimingIn = true;
         input.Weapon.Fire2Release.performed += _ => isAimingIn = false;
 
@@ -49,6 +56,10 @@ public class InputManager : MonoBehaviour
         input.Weapon.Fire1Release.performed += _ => isFiring = false;
 
         input.Weapon.Reload.performed += Reload_performed;
+
+        input.Weapon.PrimarySeleted.performed += _ => SelectWeapon(1);
+        input.Weapon.SecondarySeleted.performed += _ => SelectWeapon(2);
+        input.Weapon.MeleeSeleted.performed += _ => SelectWeapon(3);
 
         input.Enable();
     }
@@ -65,6 +76,11 @@ public class InputManager : MonoBehaviour
         input?.Disable();
         input?.Dispose();
         instance = null;
+    }
+
+    public void SelectWeapon(int id)
+    {
+        OnWeaponSelected?.Invoke(id);
     }
 
     private void Reload_performed(InputAction.CallbackContext obj)
