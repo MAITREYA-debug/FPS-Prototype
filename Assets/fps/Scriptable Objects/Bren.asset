@@ -16,8 +16,8 @@ MonoBehaviour:
   name: bren
   shootlayer:
     serializedVersion: 2
-    m_Bits: 1
-  magzine: 25
+    m_Bits: 246
+  magazine: 39
   reloadTime: 1
   FireRate: 0.15
   ErrorRange: 20

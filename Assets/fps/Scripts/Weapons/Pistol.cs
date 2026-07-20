@@ -25,13 +25,13 @@ public class Pistol : Gun
 
     void Start()
     {
-        
+        currentBullets = gunData.magazine;
     }
 
     private void Firepress()
     {
         Debug.Log("fire ");
-        if (!InputManager.instance.isFiring || currentBullets <= 0)
+        if (currentBullets <= 0)
         {
             return;
         }
@@ -51,6 +51,7 @@ public class Pistol : Gun
 
     void Update()
     {
+        base.Update();
         tryShoot();
     }
 
@@ -75,6 +76,7 @@ public class Pistol : Gun
 
         if (Physics.Raycast(ray, out RaycastHit hit, gunData.MaxTravelDistance, gunData.shootlayer))
         {
+            Debug.Log("pistol hit");
             if (hitImpact != null)
             {
                 var hitEffect = Instantiate(hitImpact, hit.point, Quaternion.LookRotation(hit.normal));
@@ -87,7 +89,6 @@ public class Pistol : Gun
         {
             bullet.Initialize(ray.origin + ray.direction * gunData.MaxTravelDistance);
         }
-
         
     }
 }
