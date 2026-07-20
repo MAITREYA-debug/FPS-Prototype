@@ -53,8 +53,8 @@ public class InputManager : MonoBehaviour
         input.Weapon.Fire2Press.performed += _ => isAimingIn = true;
         input.Weapon.Fire2Release.performed += _ => isAimingIn = false;
 
-        input.Weapon.Fire1Press.performed += _ => isFiring = true;
         input.Weapon.Fire1Press.performed += Fire1Press_performed;
+        input.Weapon.Fire1Press.performed += _ => isFiring = true;
         input.Weapon.Fire1Release.performed += _ => isFiring = false;
 
         input.Weapon.Reload.performed += Reload_performed;
@@ -64,10 +64,11 @@ public class InputManager : MonoBehaviour
         input.Weapon.MeleeSeleted.performed += _ => SelectWeapon(3);
 
         input.Weapon.WeaponPickUp.performed += weaponPickup_performed;
-        input.Weapon.WeaponDrop.performed += weaponDrop_performed;
+        input.Weapon.WeaponDrop.performed += weaponDrop_performed;      
 
         input.Enable();
     }
+
 
    
 
@@ -81,6 +82,8 @@ public class InputManager : MonoBehaviour
         input?.Disable();
         input?.Dispose();
         instance = null;
+
+        input.Disable();
     }
 
     public void SelectWeapon(int id)

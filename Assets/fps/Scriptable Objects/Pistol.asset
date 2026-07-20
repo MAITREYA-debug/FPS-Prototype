@@ -17,7 +17,7 @@ MonoBehaviour:
   shootlayer:
     serializedVersion: 2
     m_Bits: 1
-  magzine: 9
+  magazine: 30
   reloadTime: 1
   FireRate: 0.2
   ErrorRange: 20

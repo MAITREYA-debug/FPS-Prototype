@@ -18,7 +18,7 @@ public abstract class Gun : MonoBehaviour
 
 
     [Header("Current gun")]
-    public float currentBullets = 0;
+    public int currentBullets = 0;
     public float fireDelayCounter = 0;
     public bool isReloading = false;
 
@@ -27,7 +27,7 @@ public abstract class Gun : MonoBehaviour
         playerController = transform.root.GetComponent<Player_Controller>();
         camera = playerController.GetComponentInChildren<Camera>();
 
-        currentBullets = gunData.magzine;
+        currentBullets = gunData.magazine;
 
         muzzleFlashPosition = this.transform.Find("muzzleFlashPosition");
         if(muzzleFlashPosition == null)
@@ -40,7 +40,7 @@ public abstract class Gun : MonoBehaviour
 
     public void Update()
     {
-        
+        UpdateAmmoDisplay();            
     }
 
     virtual
@@ -78,7 +78,7 @@ public abstract class Gun : MonoBehaviour
 
     public void tryReload()
     {
-        if (currentBullets < gunData.magzine)
+        if (currentBullets < gunData.magazine)
         {
             StartCoroutine(Reloading());
         }
@@ -92,7 +92,7 @@ public abstract class Gun : MonoBehaviour
 
         yield return new WaitForSeconds(gunData.reloadTime);
 
-        currentBullets = gunData.magzine;
+        currentBullets = gunData.magazine;
         isReloading = false;
 
         Debug.Log("Gun is reloaded");

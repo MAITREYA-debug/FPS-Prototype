@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4400238265574238681}
   - component: {fileID: 9100011129923093527}
+  - component: {fileID: 8344149451655627285}
   m_Layer: 6
   m_Name: Desert Eagle prefab
   m_TagString: Untagged
@@ -25,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 449329081294331496}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -57,6 +58,29 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8344149451655627285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449329081294331496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4b633b78312a35499f410a77bf32bf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Pistol
+  gunData: {fileID: 11400000, guid: bb2cca8bf3183564597f4cb32be390f4, type: 2}
+  playerController: {fileID: 0}
+  camera: {fileID: 0}
+  AmmoTxt: {fileID: 0}
+  bulletPrefab: {fileID: 4267073684437714169, guid: dee6103b168848741b030445982bf62f, type: 3}
+  muzzleFlash: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
+  hitImpact: {fileID: 1557088843730042366, guid: 15cd8708b1b7b4a47be1dfbf9f9ed794, type: 3}
+  muzzleFlashPosition: {fileID: 0}
+  currentBullets: 0
+  fireDelayCounter: 0
+  isReloading: 0
 --- !u!1 &2024393785932989274
 GameObject:
   m_ObjectHideFlags: 0
@@ -67,7 +91,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6514632631945175708}
   m_Layer: 6
-  m_Name: muzzleFlash
+  m_Name: muzzleFlashPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

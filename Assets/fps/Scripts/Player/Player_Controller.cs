@@ -43,6 +43,8 @@ public class Player_Controller : MonoBehaviour
     public float weaponAnimation_Speed;
     public bool isGrounded;
     public bool isAimingIn;
+    [SerializeField] LayerMask InteractionMask;
+    
 
     enum SpeedState
     {
@@ -272,15 +274,18 @@ public class Player_Controller : MonoBehaviour
         Ray ray = camera.ViewportPointToRay(new Vector3(0.5f , 0.5f , 0f));
         
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 4f , LayerMask.GetMask("Player")))
+        if (Physics.Raycast(ray, out RaycastHit hit, 4f , InteractionMask))
         {
             Debug.Log("weapon pickup hit" + hit.collider.name);
-            var obj = hit.collider.GetComponent<Gun>();
+
+            var obj = hit.collider.gameObject.GetComponent<PickUpGun_Script>();
 
             if (obj != null)
             {
                 Weapon_Manager.instance.PickUp_Weapon(obj);
+                Debug.Log("Weapon Destroyed " + obj.name);
                 Destroy(obj.gameObject);
+
             }
         }
     }

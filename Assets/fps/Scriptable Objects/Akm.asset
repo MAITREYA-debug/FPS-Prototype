@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Akm
   m_EditorClassIdentifier: Assembly-CSharp::GunData
   gunId: 101
-  name: 
+  name: Akm
   shootlayer:
     serializedVersion: 2
     m_Bits: 1
-  magzine: 30
+  magazine: 30
   reloadTime: 1
   FireRate: 0.2
   ErrorRange: 30

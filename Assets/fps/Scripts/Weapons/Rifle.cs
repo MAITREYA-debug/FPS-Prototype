@@ -4,7 +4,7 @@ public class Rifle : Gun
 {
 
 
-    bool firePressed = false;
+    //bool firePressed = false;
 
     #region - onEnable/onDisable -
     void OnEnable()
@@ -29,16 +29,23 @@ public class Rifle : Gun
 
     void Update()
     {
-        tryShoot();
+       tryShoot();
+    }
+
+    public override void tryShoot()
+    {
+        base.tryShoot();
     }
 
 
     public override void shoot()
     {
+        Debug.Log("riffle fire");
+
         --currentBullets;
         fireDelayCounter = 0;
 
-        bool applySpread = playerController != null && playerController.weaponAnimation_Speed > 0.1f;
+        bool applySpread = playerController.weaponAnimation_Speed > 0.1f;
         Ray ray = BuildAimRay(applySpread);
 
         var flash = Instantiate(muzzleFlash, muzzleFlashPosition.position, muzzleFlashPosition.rotation, muzzleFlashPosition);

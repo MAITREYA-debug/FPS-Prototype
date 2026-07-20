@@ -6,11 +6,11 @@ public class GunData : ScriptableObject
 
     [Header("Weapon info")]
     public int gunId = 0;
-    public string name = "";
+    public string name = new string("");
     public LayerMask shootlayer;
 
     [Header("specs")]
-    public int magzine = 0;
+    public int magazine = 0;
     public float reloadTime = 0;
 
     public float FireRate = 0;

@@ -16,8 +16,8 @@ MonoBehaviour:
   name: knife
   shootlayer:
     serializedVersion: 2
-    m_Bits: 0
-  magzine: 1
+    m_Bits: 4294967295
+  magazine: 0
   reloadTime: 0
   FireRate: 0.2
   ErrorRange: 0
