@@ -6,7 +6,7 @@ public class Weapon_Shooting : MonoBehaviour
 {
     [Header("Reference")]
     [SerializeField] Player_Controller playerController;
-    [SerializeField] Camera camera;
+    [SerializeField] Camera playerCamera;
     [SerializeField] Animator animator;
     [SerializeField] TextMeshProUGUI AmmoTxt;
 
@@ -60,7 +60,7 @@ public class Weapon_Shooting : MonoBehaviour
     #region - shoot -
     void Shoot()
     {
-        if (!InputManager.instance.isFiring || CurrentBullets <= 0 || bulletPrefab == null || muzzleFlashSpawnPoint == null || camera == null) return;
+        if (!InputManager.instance.isFiring || CurrentBullets <= 0 || bulletPrefab == null || muzzleFlashSpawnPoint == null || playerCamera == null) return;
         if (currentFireRate < fireRate) return; 
         
 
@@ -111,7 +111,7 @@ public class Weapon_Shooting : MonoBehaviour
             spreadY = (Random.value - 0.5f) * 2f * errorRange / Screen.height;
         }
 
-        return camera.ViewportPointToRay(new Vector3(0.5f + spreadX, 0.5f + spreadY, 0f));
+        return playerCamera.ViewportPointToRay(new Vector3(0.5f + spreadX, 0.5f + spreadY, 0f));
     }
     #endregion
 

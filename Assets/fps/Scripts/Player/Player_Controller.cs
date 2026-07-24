@@ -5,7 +5,7 @@ public class Player_Controller : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private CharacterController characterController;
-    [SerializeField] private Camera camera;
+    [SerializeField] private Camera playerCamera;
     [SerializeField] public Transform cameraHolder;
     [SerializeField] private Weapon_Controller weapon_Controller;
 
@@ -76,8 +76,8 @@ public class Player_Controller : MonoBehaviour
             Debug.LogError($"{nameof(CharacterController)} is missing.", this);
         }
 
-        camera = this.GetComponentInChildren<Camera>();
-        if(camera == null)
+        playerCamera = this.GetComponentInChildren<Camera>();
+        if(playerCamera == null)
         {
             Debug.LogError($"{nameof(Camera)} is missing.", this);
         }
@@ -271,7 +271,7 @@ public class Player_Controller : MonoBehaviour
 
     public void WeaponPickInteraction()
     {
-        Ray ray = camera.ViewportPointToRay(new Vector3(0.5f , 0.5f , 0f));
+        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f , 0.5f , 0f));
         
 
         if (Physics.Raycast(ray, out RaycastHit hit, 4f , InteractionMask))

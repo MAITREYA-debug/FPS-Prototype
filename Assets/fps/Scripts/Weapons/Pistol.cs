@@ -3,9 +3,7 @@ using UnityEngine;
 public class Pistol : Gun
 {
 
-  
 
-    bool firePressed = false;
 
     #region - onEnable/onDisable -
     void OnEnable()
@@ -50,9 +48,9 @@ public class Pistol : Gun
     
 
     void Update()
-    {
-        base.Update();
+    {        
         tryShoot();
+        UpdateAmmoDisplay();
     }
 
     

@@ -44,7 +44,7 @@ public class Weapon_Manager : MonoBehaviour
 
     Transform WeaponPosition;
 
-    bool canDrop = false;
+
 
     public enum WeaponType
     {

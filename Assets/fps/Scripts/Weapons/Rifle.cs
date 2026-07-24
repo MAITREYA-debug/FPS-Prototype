@@ -30,6 +30,7 @@ public class Rifle : Gun
     void Update()
     {
        tryShoot();
+       UpdateAmmoDisplay();
     }
 
     public override void tryShoot()

@@ -5,7 +5,7 @@ public class Melee : Gun
 
   
 
-    bool firePressed = false;
+  
 
     #region - onEnable/onDisable -
     void OnEnable()
@@ -49,6 +49,7 @@ public class Melee : Gun
     void Update()
     {
         tryShoot();
+        UpdateAmmoDisplay();
     }
 
     

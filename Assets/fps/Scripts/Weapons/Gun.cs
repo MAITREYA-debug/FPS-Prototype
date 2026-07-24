@@ -7,7 +7,7 @@ public abstract class Gun : MonoBehaviour
 
     [SerializeField] public GunData gunData;
     [SerializeField] public Player_Controller playerController;
-    [SerializeField] public Camera camera;
+    [SerializeField] public Camera Playercamera;
     [SerializeField] TextMeshProUGUI AmmoTxt;
 
     [Header("Firing")]
@@ -25,7 +25,7 @@ public abstract class Gun : MonoBehaviour
     public void Awake()
     {
         playerController = transform.root.GetComponent<Player_Controller>();
-        camera = playerController.GetComponentInChildren<Camera>();
+        Playercamera = playerController.GetComponentInChildren<Camera>();
 
         currentBullets = gunData.magazine;
 
@@ -37,11 +37,6 @@ public abstract class Gun : MonoBehaviour
     }
 
       
-
-    public void Update()
-    {
-        UpdateAmmoDisplay();            
-    }
 
     virtual
     public void tryShoot()
@@ -72,7 +67,7 @@ public abstract class Gun : MonoBehaviour
             spreadY = (Random.value - 0.5f) * 2f * gunData.ErrorRange / Screen.height;
         }
 
-        return camera.ViewportPointToRay(new Vector3(0.5f + spreadX, 0.5f + spreadY, 0f));
+        return Playercamera.ViewportPointToRay(new Vector3(0.5f + spreadX, 0.5f + spreadY, 0f));
     }
 
 
@@ -99,7 +94,7 @@ public abstract class Gun : MonoBehaviour
 
     }
 
-    void UpdateAmmoDisplay()
+    public void UpdateAmmoDisplay()
     {
         if (AmmoTxt != null)
         {
