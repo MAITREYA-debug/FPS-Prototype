@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 public class Weapon_Manager : MonoBehaviour
 {
@@ -18,15 +20,27 @@ public class Weapon_Manager : MonoBehaviour
     [Header("Reference")]
     [SerializeField] Player_Controller playercontroller;
     [SerializeField] Weapon_Controller weaponContoller;
-    //[SerializeField] Weapon_Shooting weaponShooting;
-    //[SerializeField] Animator WeaponAnimation;
-    //[SerializeField] Animator playerAnimation;
+    [SerializeField] Weapon_Shooting weaponShooting;
+    [SerializeField] Animator WeaponAnimation;
+    [SerializeField] Animator playerAnimation;
+    [SerializeField] TwoBoneIKConstraint left_IK;
+    [SerializeField] TwoBoneIKConstraint Right_IK;
+    [SerializeField] Transform leftarmpos;
+    [SerializeField] Transform rightarmpos;
+
+
+    RigBuilder rigBuilder;
+    
+
+    
 
 
 
     [SerializeField] WeaponType currentWeaponType;
     [SerializeField] List<GameObject> Use_WeaponPool = new List<GameObject>();
     [SerializeField] Dictionary<int, Gun> holdWeapons = new Dictionary<int, Gun>();
+
+
 
     [SerializeField] List<GameObject> Throw_WeaponPool = new List<GameObject>();
     [SerializeField] Dictionary<int, PickUpGun_Script> throwWeapons = new Dictionary<int, PickUpGun_Script>();
@@ -109,6 +123,8 @@ public class Weapon_Manager : MonoBehaviour
             }
         }
 
+        rigBuilder = gameObject.GetComponentInChildren<RigBuilder>();
+        rigBuilder.Build();
         act_Deactivate_Weapon();
 
     }
@@ -116,8 +132,15 @@ public class Weapon_Manager : MonoBehaviour
 
     private void Update()
     {
-        
+        leftarmpos.position = currentHoldWeapon_Obj.WeaponLeftHandpos.position;
+        leftarmpos.rotation = currentHoldWeapon_Obj.WeaponLeftHandpos.rotation;
+
+        rightarmpos.position = currentHoldWeapon_Obj.WeaponRightHandpos.position;
+        rightarmpos.rotation = currentHoldWeapon_Obj.WeaponRightHandpos.rotation;
+
     }
+
+
 #region - Handle Weapon Selection input -
 
     private void WeaponTypeSelection(int weaponType_no)
@@ -157,7 +180,7 @@ public class Weapon_Manager : MonoBehaviour
 #region - activate Selected Weapon -
 
     void act_Deactivate_Weapon()
-    {
+    { 
 
         Debug.Log("Weapon Activate deactivate ");
         if (selectedWeaponId == 0)
@@ -170,9 +193,13 @@ public class Weapon_Manager : MonoBehaviour
         currentHoldWeapon_Obj.gameObject.SetActive(false);
 
         currentHoldWeapon_Obj = holdWeapons.TryGetValue(selectedWeaponId, out Gun gun) ? gun : currentHoldWeapon_Obj;
-
+        weaponContoller.SetValuesForWeapon(currentHoldWeapon_Obj.ScopePosition, currentHoldWeapon_Obj.animator);
         currentHoldWeapon_Obj.gameObject.SetActive(true);
         //currentWeaponId = selectedWeaponId;
+
+        ChangeAnimatorController(currentHoldWeapon_Obj.playerAnimationtype, true);
+
+
     }
 
     #endregion   
@@ -182,6 +209,7 @@ public class Weapon_Manager : MonoBehaviour
     {
         Debug.Log("Weapon Picked Up in WeaponManager ");
         setOrNull_AnyWeapon(Pickedweapon.gunData.gunId);
+
         currentHoldWeapon_Obj.currentBullets = Pickedweapon.getBulletCount();
 
     }
@@ -256,7 +284,7 @@ public class Weapon_Manager : MonoBehaviour
         {
             if (100 < WeaponId && WeaponId < 200)
             {
-                if (primaryId != 0) dropWeapon(primaryId);                
+                if (primaryId != 0) dropWeapon(primaryId);
                 primaryId = WeaponId;
                 currentWeaponType = WeaponType.primary;
             }
@@ -270,8 +298,44 @@ public class Weapon_Manager : MonoBehaviour
 
         SetHoldWeapon_ID();
         act_Deactivate_Weapon();
+      
 
     }
+
+    #endregion
+
+
+    #region - Weapon / Player manageing animation - 
+        public void ChangeAnimatorController(AnimatorController animationName, bool value)
+    {
+        if (value)
+        {
+            if (animationName != null)
+            {
+                playerAnimation.runtimeAnimatorController = animationName;
+                
+                //leftarmpos.position = currentHoldWeapon_Obj.WeaponLeftHandpos.position;
+                //rightarmpos.position = currentHoldWeapon_Obj.WeaponRightHandpos.position;
+               
+                left_IK.data.target = leftarmpos;
+                Right_IK.data.target = rightarmpos; 
+
+                rigBuilder.Clear();
+                rigBuilder.Build();
+
+
+            }
+            else
+            {
+                Debug.LogError("Animator Controller is null");
+            }             
+        }
+
+    }
+    
+
+   
+
 
     #endregion
 

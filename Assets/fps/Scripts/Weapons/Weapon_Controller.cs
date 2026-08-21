@@ -78,6 +78,7 @@ public class Weapon_Controller : MonoBehaviour
 
     void isAiming_Calculation()
     {
+
         bool isAimingIn = InputManager.instance.isAimingIn;
         Vector3 target = transform.position;
 
@@ -168,7 +169,15 @@ public class Weapon_Controller : MonoBehaviour
     }
     #endregion
 
-  
 
+    #region - Weapon Changed Values Change -
+
+    public void SetValuesForWeapon(Transform ScopePosition, Animator currentAnimator)
+    {
+        ScopeCameraPosition = ScopePosition;
+        weaponAnimator = currentAnimator;
+    }
+
+    #endregion
 
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using TMPro;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public abstract class Gun : MonoBehaviour
@@ -9,12 +10,18 @@ public abstract class Gun : MonoBehaviour
     [SerializeField] public Player_Controller playerController;
     [SerializeField] public Camera Playercamera;
     [SerializeField] TextMeshProUGUI AmmoTxt;
+    [SerializeField] public Animator animator;
+    [SerializeField] public AnimatorController playerAnimationtype;
+    [SerializeField] public Transform WeaponLeftHandpos;
+    [SerializeField] public Transform WeaponRightHandpos;
 
     [Header("Firing")]
     [SerializeField] public GameObject bulletPrefab;
     [SerializeField] public GameObject muzzleFlash;
     [SerializeField] public GameObject hitImpact;
     [SerializeField] public Transform muzzleFlashPosition;
+    [SerializeField] public Transform ScopePosition;
+
 
 
     [Header("Current gun")]
@@ -26,6 +33,8 @@ public abstract class Gun : MonoBehaviour
     {
         playerController = transform.root.GetComponent<Player_Controller>();
         Playercamera = playerController.GetComponentInChildren<Camera>();
+        WeaponLeftHandpos = gameObject.transform.Find("WeaponLeft_Hand");
+        WeaponRightHandpos = gameObject.transform.Find("WeaponRight_Hand");
 
         currentBullets = gunData.magazine;
 
@@ -34,6 +43,9 @@ public abstract class Gun : MonoBehaviour
         {
             Debug.LogError("MuzzleFlashPosition not found in " + this.name);
         }
+
+        animator = transform.GetComponent<Animator>();
+        ScopePosition = transform.Find("InSight").GetComponent<Transform>();
     }
 
       

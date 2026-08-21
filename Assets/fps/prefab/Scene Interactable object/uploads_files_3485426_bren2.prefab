@@ -227,6 +227,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickUpGun_Script
   rb: {fileID: 0}
   gunData: {fileID: 11400000, guid: 32f7fec91364c0344a4d6510790809f9, type: 2}
-  position: {fileID: 0}
   throwForce: 1
   bulletCount: 0
