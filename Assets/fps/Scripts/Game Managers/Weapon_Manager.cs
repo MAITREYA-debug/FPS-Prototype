@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -306,7 +305,7 @@ public class Weapon_Manager : MonoBehaviour
 
 
     #region - Weapon / Player manageing animation - 
-        public void ChangeAnimatorController(AnimatorController animationName, bool value)
+        public void ChangeAnimatorController(RuntimeAnimatorController animationName, bool value)
     {
         if (value)
         {

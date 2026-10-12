@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: Assembly-CSharp::GunData
   gunId: 1
-  name: Desert Eagle
+  gunName: 
   shootlayer:
     serializedVersion: 2
     m_Bits: 1
-  magazine: 30
+  magazine: 9
   reloadTime: 1
   FireRate: 0.2
   ErrorRange: 20

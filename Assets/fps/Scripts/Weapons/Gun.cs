@@ -1,6 +1,6 @@
 using System.Collections;
 using TMPro;
-using UnityEditor.Animations;
+//using UnityEditor.Animations;
 using UnityEngine;
 
 public abstract class Gun : MonoBehaviour
@@ -11,7 +11,7 @@ public abstract class Gun : MonoBehaviour
     [SerializeField] public Camera Playercamera;
     [SerializeField] TextMeshProUGUI AmmoTxt;
     [SerializeField] public Animator animator;
-    [SerializeField] public AnimatorController playerAnimationtype;
+    [SerializeField] public RuntimeAnimatorController playerAnimationtype;
     [SerializeField] public Transform WeaponLeftHandpos;
     [SerializeField] public Transform WeaponRightHandpos;
 

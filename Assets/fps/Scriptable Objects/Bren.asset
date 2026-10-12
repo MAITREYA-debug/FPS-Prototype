@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Bren
   m_EditorClassIdentifier: Assembly-CSharp::GunData
   gunId: 102
-  name: bren
+  gunName: 
   shootlayer:
     serializedVersion: 2
     m_Bits: 246
-  magazine: 39
+  magazine: 40
   reloadTime: 1
   FireRate: 0.15
   ErrorRange: 20
