@@ -5,6 +5,7 @@ public class Player_Controller : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private CharacterController characterController;
+    [SerializeField] private Camera playerCamera;
     [SerializeField] public Transform cameraHolder;
     [SerializeField] private Weapon_Controller weapon_Controller;
 
@@ -42,6 +43,8 @@ public class Player_Controller : MonoBehaviour
     public float weaponAnimation_Speed;
     public bool isGrounded;
     public bool isAimingIn;
+    [SerializeField] LayerMask InteractionMask;
+    
 
     enum SpeedState
     {
@@ -58,13 +61,13 @@ public class Player_Controller : MonoBehaviour
     void Awake()
     {
         weapon_Controller = GetComponentInChildren<Weapon_Controller>();
-        if (weapon_Controller != null)
+        if (weapon_Controller == null)
         {
-            weapon_Controller.Initialization(this);
+            Debug.LogWarning($"{nameof(Player_Controller)} could not find {nameof(Weapon_Controller)} in children.", this);
         }
         else
         {
-            Debug.LogWarning($"{nameof(Player_Controller)} could not find {nameof(Weapon_Controller)} in children.", this);
+            weapon_Controller.Initialization(this);
         }
 
         characterController = GetComponent<CharacterController>();
@@ -73,21 +76,18 @@ public class Player_Controller : MonoBehaviour
             Debug.LogError($"{nameof(CharacterController)} is missing.", this);
         }
 
+        playerCamera = this.GetComponentInChildren<Camera>();
+        if(playerCamera == null)
+        {
+            Debug.LogError($"{nameof(Camera)} is missing.", this);
+        }
+
         currentSpeed = walkSpeed;
         _verticalVelocity = 0f;
         defaultCamerapos = cameraHolder.transform.localPosition;
         offset = defaultCamerapos - characterController.center;
     }
 
-    void OnEnable()
-    {
-        InputManager.OnJump += jump;
-    }
-
-    void OnDisable()
-    {
-        InputManager.OnJump -= jump;
-    }
 
     void Update()
     {
@@ -101,8 +101,23 @@ public class Player_Controller : MonoBehaviour
         HandleMovement();
         HandleLook();
         HandleCrouch();
+    } 
+
+    #region - Enable/Disable -
+    void OnEnable()
+    {
+        InputManager.OnJump += jump;
+        InputManager.onPickup += WeaponPickInteraction;
     }
 
+    void OnDisable()
+    {
+        InputManager.OnJump -= jump;
+        InputManager.onPickup -= WeaponPickInteraction;
+    }
+#endregion
+
+    #region - Movement -
     void StateManager()
     {
         Vector2 moveInput = InputManager.instance.MoveInput;
@@ -144,7 +159,9 @@ public class Player_Controller : MonoBehaviour
                 break;
         }
     }
+    #endregion
 
+    #region - Movement -
     void HandleMovement()
     {
         currentSpeed = speed * currentSpeedMultiplier;
@@ -178,7 +195,9 @@ public class Player_Controller : MonoBehaviour
             weaponAnimation_Speed = 0f;
         }
     }
+    #endregion
 
+    #region - Look -
     void HandleLook()
     {
         Vector2 mouseInput = InputManager.instance.LookInput * _mouseSensitivity;
@@ -189,7 +208,9 @@ public class Player_Controller : MonoBehaviour
         _pitch = Mathf.Clamp(_pitch, -_maxlookAngle, _maxlookAngle);
         cameraHolder.localRotation = Quaternion.Euler(_pitch, 0, 0);
     }
+    #endregion
 
+    #region - Crouch -
     void HandleCrouch()
     {
         float targetHeight = _isCrouching ? _crouchHeight : _standingHeight;
@@ -202,7 +223,9 @@ public class Player_Controller : MonoBehaviour
 
         cameraHolder.localPosition = center + offset;
     }
+    #endregion
 
+    #region - jump -
     void jump()
     {
         _jump = true;
@@ -241,5 +264,29 @@ public class Player_Controller : MonoBehaviour
         }
 
         wasGrounded = isGrounded;
+    }
+
+    #endregion
+
+
+    public void WeaponPickInteraction()
+    {
+        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f , 0.5f , 0f));
+        
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 4f , InteractionMask))
+        {
+            Debug.Log("weapon pickup hit" + hit.collider.name);
+
+            var obj = hit.collider.gameObject.GetComponent<PickUpGun_Script>();
+
+            if (obj != null)
+            {
+                Weapon_Manager.instance.PickUp_Weapon(obj);
+                Debug.Log("Weapon Destroyed " + obj.name);
+                Destroy(obj.gameObject);
+
+            }
+        }
     }
 }

@@ -2,17 +2,18 @@ using TMPro;
 using UnityEngine;
 
 public class Weapon_Shooting : MonoBehaviour
+
 {
     [Header("Reference")]
     [SerializeField] Player_Controller playerController;
-    [SerializeField] Camera camera;
+    [SerializeField] Camera playerCamera;
     [SerializeField] Animator animator;
     [SerializeField] TextMeshProUGUI AmmoTxt;
 
     [Header("Firing")]
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] GameObject muzzleFlash;
-    [SerializeField] GameObject HitVisual;
+    [SerializeField] GameObject hitImpact;
 
     [SerializeField] Transform muzzleFlashSpawnPoint;
     [SerializeField] LayerMask shootLayer;
@@ -44,6 +45,7 @@ public class Weapon_Shooting : MonoBehaviour
         currentFireRate += Time.deltaTime;
     }
 
+    #region - onEnable/onDisable -
     void OnEnable()
     {
         InputManager.OnReload += Reload;
@@ -53,23 +55,14 @@ public class Weapon_Shooting : MonoBehaviour
     {
         InputManager.OnReload -= Reload;
     }
+    #endregion
 
+    #region - shoot -
     void Shoot()
     {
-        if (!InputManager.instance.isFiring || CurrentBullets <= 0)
-        {
-            return;
-        }
-
-        if (currentFireRate < fireRate)
-        {
-            return;
-        }
-
-        if (bulletPrefab == null || muzzleFlashSpawnPoint == null || camera == null)
-        {
-            return;
-        }
+        if (!InputManager.instance.isFiring || CurrentBullets <= 0 || bulletPrefab == null || muzzleFlashSpawnPoint == null || playerCamera == null) return;
+        if (currentFireRate < fireRate) return; 
+        
 
         currentFireRate = 0f;
         CurrentBullets--;
@@ -87,18 +80,13 @@ public class Weapon_Shooting : MonoBehaviour
         }
 
         Bullet_script bullet = Instantiate(bulletPrefab, muzzleFlashSpawnPoint.position, Quaternion.identity)
-            .GetComponent<Bullet_script>();
-
-        if (bullet == null)
-        {
-            return;
-        }
+            .GetComponent<Bullet_script>();        
 
         if (Physics.Raycast(ray, out RaycastHit hit, maxShootDistance, shootLayer))
         {
-            if (HitVisual != null)
+            if (hitImpact != null)
             {
-                var hitEffect = Instantiate(HitVisual, hit.point, Quaternion.LookRotation(hit.normal));
+                var hitEffect = Instantiate(hitImpact, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(hitEffect, 10f);
             }
 
@@ -109,7 +97,9 @@ public class Weapon_Shooting : MonoBehaviour
             bullet.Initialize(ray.origin + ray.direction * maxShootDistance);
         }
     }
+    #endregion
 
+    #region - build Aim Ray -
     Ray BuildAimRay(bool applySpread)
     {
         float spreadX = 0f;
@@ -121,8 +111,11 @@ public class Weapon_Shooting : MonoBehaviour
             spreadY = (Random.value - 0.5f) * 2f * errorRange / Screen.height;
         }
 
-        return camera.ViewportPointToRay(new Vector3(0.5f + spreadX, 0.5f + spreadY, 0f));
+        return playerCamera.ViewportPointToRay(new Vector3(0.5f + spreadX, 0.5f + spreadY, 0f));
     }
+    #endregion
+
+    #region - Ammo reload -
 
     void Reload()
     {
@@ -136,12 +129,29 @@ public class Weapon_Shooting : MonoBehaviour
         UpdateAmmoDisplay();
         isReloading = false;
     }
+     
 
     void UpdateAmmoDisplay()
     {
         if (AmmoTxt != null)
         {
             AmmoTxt.SetText(CurrentBullets.ToString());
+        }
+    }
+
+    #endregion
+
+
+    void WeaponPickInteraction()
+    {
+        Ray ray = BuildAimRay(false);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, maxShootDistance, shootLayer))
+        {
+            if (hitImpact != null)
+            {
+               
+            }           
         }
     }
 }
