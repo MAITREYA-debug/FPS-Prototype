@@ -19,8 +19,7 @@ public class MakeSound : MonoBehaviour
 
             source.Play();
 
-
-            Sound sound = new Sound(transform.position, range, Sound.SoundType.Interesting);
+            Sound sound = new Sound(transform.position, range, Sound.SoundType.Footsteps);
             Sounds.makeSound(sound);
             
         }

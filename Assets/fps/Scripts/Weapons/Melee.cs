@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Melee : Gun
+public class Melee : Gun    
 {
 
   
@@ -25,6 +25,8 @@ public class Melee : Gun
     {
         
     }
+
+
 
     private void Firepress()
     {

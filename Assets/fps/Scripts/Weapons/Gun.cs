@@ -67,6 +67,8 @@ public abstract class Gun : MonoBehaviour
 
     public abstract void shoot();
 
+    //public abstract void shootSound();
+
 
     public Ray BuildAimRay(bool applySpread)
     {

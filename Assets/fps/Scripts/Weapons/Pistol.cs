@@ -64,6 +64,9 @@ public class Pistol : Gun
     public override void shoot()
     {
         --currentBullets;
+
+        // sound script
+
         fireDelayCounter = 0;
 
         bool applySpread = playerController != null && playerController.weaponAnimation_Speed > 0.1f;
