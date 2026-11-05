@@ -11,6 +11,7 @@ public class Sound
         Running,
         Jump,
         Land,
+        Pickup,
         Reload,
         Melee
     }

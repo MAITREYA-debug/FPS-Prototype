@@ -3,10 +3,12 @@ using UnityEngine;
 
 public class PlayerSoundManager : MonoBehaviour
 {
+    public static PlayerSoundManager instance { get; private set; }
+
     [System.Serializable]
     public class SoundProfile
     {
-
+        
         public Sound.SoundType type; 
         public AudioClip[] clips; // all the clips for this sound type
 
@@ -15,6 +17,8 @@ public class PlayerSoundManager : MonoBehaviour
 
         public float range = 20f;
         public bool notifyAI = false;
+        public bool Randompitch  = false;
+        public bool RandomClipsPlay = false;
 
         [HideInInspector]
         public int lastClipIndex = -1;
@@ -30,26 +34,28 @@ public class PlayerSoundManager : MonoBehaviour
 
     private void Awake()
     {
+        // data structure to store sounds profile for each sound type, for quick lookup
         soundLookup = new Dictionary<Sound.SoundType, SoundProfile>(
             soundProfiles.Length
         );
 
+        // stores all the sound in soundlookup data structure 
         foreach (SoundProfile profile in soundProfiles)
         {
-            if (profile == null)
+            if (profile == null) // checks if their is no profile
                 continue;
 
-            if (soundLookup.ContainsKey(profile.type))
+            if (soundLookup.ContainsKey(profile.type)) // dupicate profile check
             {
                 Debug.LogWarning(
                     $"Duplicate sound profile: {profile.type}", this);
                 continue;
             }
 
-            soundLookup.Add(profile.type, profile);
+            soundLookup.Add(profile.type, profile); // adds profiles with type as key and profile as values
         }
 
-        if (source == null)
+        if (source == null) // source is the component that plays the sound
             source = GetComponent<AudioSource>();
     }
 
@@ -58,15 +64,15 @@ public class PlayerSoundManager : MonoBehaviour
         if (source == null)
             return;
 
-        if (!soundLookup.TryGetValue(type, out SoundProfile profile))
+        if (!soundLookup.TryGetValue(type, out SoundProfile profile)) // checks for type in soundlookup if present out profile
             return;
 
-        AudioClip[] clips = profile.clips;
+        AudioClip[] clips = profile.clips; // makes a list of profile clips for playing
 
-        if (clips == null || clips.Length == 0)
+        if (clips == null || clips.Length == 0) // checks if clips is not empty or null
             return;
 
-        int index = GetRandomClipIndex(profile, clips.Length);
+        int index = GetRandomClipIndex(profile, clips.Length); // gets a random index out of all the clips length
         AudioClip clip = clips[index];
 
         if (clip == null)

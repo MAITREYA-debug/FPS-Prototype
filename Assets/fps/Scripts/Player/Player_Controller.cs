@@ -124,6 +124,7 @@ public class Player_Controller : MonoBehaviour
         _isRunning = InputManager.instance.isSprinting && moveInput.y > 0f;
         _isCrouching = InputManager.instance.isCrouching;
         isAimingIn = InputManager.instance.isAimingIn;
+        isAimingIn = true;
 
         if (isFalling)
         {

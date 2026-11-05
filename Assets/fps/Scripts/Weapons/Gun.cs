@@ -98,9 +98,9 @@ public abstract class Gun : MonoBehaviour
     {
 
         isReloading = true;
+        PlayerSoundManager.instance.Play(Sound.SoundType.Reload);
 
         yield return new WaitForSeconds(gunData.reloadTime);
-
         currentBullets = gunData.magazine;
         isReloading = false;
 

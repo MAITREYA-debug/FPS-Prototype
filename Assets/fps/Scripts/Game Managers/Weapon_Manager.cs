@@ -29,21 +29,15 @@ public class Weapon_Manager : MonoBehaviour
 
 
     RigBuilder rigBuilder;
-    
 
     
-
-
-
     [SerializeField] WeaponType currentWeaponType;
     [SerializeField] List<GameObject> Use_WeaponPool = new List<GameObject>();
     [SerializeField] Dictionary<int, Gun> holdWeapons = new Dictionary<int, Gun>();
 
 
-
     [SerializeField] List<GameObject> Throw_WeaponPool = new List<GameObject>();
     [SerializeField] Dictionary<int, PickUpGun_Script> throwWeapons = new Dictionary<int, PickUpGun_Script>();
-
 
 
     [SerializeField] int currentWeaponId = 0;
@@ -209,6 +203,7 @@ public class Weapon_Manager : MonoBehaviour
         Debug.Log("Weapon Picked Up in WeaponManager ");
         setOrNull_AnyWeapon(Pickedweapon.gunData.gunId);
 
+       // PlayerSoundManager.instance.Play(Sound.SoundType.Pickup); // calls Playersound Manager to play the pickup sound
         currentHoldWeapon_Obj.currentBullets = Pickedweapon.getBulletCount();
 
     }
@@ -303,8 +298,7 @@ public class Weapon_Manager : MonoBehaviour
 
     #endregion
 
-
-    #region - Weapon / Player manageing animation - 
+#region - Weapon / Player manageing animation - 
         public void ChangeAnimatorController(RuntimeAnimatorController animationName, bool value)
     {
         if (value)
