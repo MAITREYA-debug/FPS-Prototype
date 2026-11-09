@@ -33,7 +33,7 @@ public class Weapon_Manager : MonoBehaviour
     
     [SerializeField] WeaponType currentWeaponType;
     [SerializeField] List<GameObject> Use_WeaponPool = new List<GameObject>();
-    [SerializeField] Dictionary<int, Gun> holdWeapons = new Dictionary<int, Gun>();
+    [SerializeField] Dictionary<int, Weapons> holdWeapons = new Dictionary<int, Weapons>();
 
 
     [SerializeField] List<GameObject> Throw_WeaponPool = new List<GameObject>();
@@ -47,7 +47,7 @@ public class Weapon_Manager : MonoBehaviour
     [SerializeField] int secondaryId = 101;
     [SerializeField] int meleeId = 102;
 
-    [SerializeField] Gun currentHoldWeapon_Obj;
+    [SerializeField] Weapons currentHoldWeapon_Obj;
 
     Transform WeaponPosition;
 
@@ -90,7 +90,7 @@ public class Weapon_Manager : MonoBehaviour
 
         foreach (var weapon in Use_WeaponPool)
         {
-            var gun = weapon.GetComponent<Gun>();
+            var gun = weapon.GetComponent<Weapons>();
             if (gun != null)
             {
                 holdWeapons.Add(gun.gunData.gunId, gun);
@@ -185,12 +185,25 @@ public class Weapon_Manager : MonoBehaviour
         currentWeaponId = selectedWeaponId;
         currentHoldWeapon_Obj.gameObject.SetActive(false);
 
-        currentHoldWeapon_Obj = holdWeapons.TryGetValue(selectedWeaponId, out Gun gun) ? gun : currentHoldWeapon_Obj;
-        weaponContoller.SetValuesForWeapon(currentHoldWeapon_Obj.ScopePosition, currentHoldWeapon_Obj.animator);
+        currentHoldWeapon_Obj = holdWeapons.TryGetValue(selectedWeaponId, out Weapons weapon) ? weapon : currentHoldWeapon_Obj;        
+
+        if (currentHoldWeapon_Obj is Gun)
+        {
+            weaponContoller.SetValuesForWeapon(((Gun)currentHoldWeapon_Obj).ScopePosition, currentHoldWeapon_Obj.animator);
+        }
+        else
+        {
+            weaponContoller.SetValuesForWeapon(null, currentHoldWeapon_Obj.animator);
+        }
+
         currentHoldWeapon_Obj.gameObject.SetActive(true);
-        //currentWeaponId = selectedWeaponId;
+        currentWeaponId = selectedWeaponId;
 
         ChangeAnimatorController(currentHoldWeapon_Obj.playerAnimationtype, true);
+        if(PlayerSoundManager.instance != null){
+            PlayerSoundManager.instance.Play(Sound.SoundType.WeaponSwitch);
+
+        }
 
 
     }
@@ -203,8 +216,10 @@ public class Weapon_Manager : MonoBehaviour
         Debug.Log("Weapon Picked Up in WeaponManager ");
         setOrNull_AnyWeapon(Pickedweapon.gunData.gunId);
 
-       // PlayerSoundManager.instance.Play(Sound.SoundType.Pickup); // calls Playersound Manager to play the pickup sound
-        currentHoldWeapon_Obj.currentBullets = Pickedweapon.getBulletCount();
+        //PlayerSoundManager.instance.Play(Sound.SoundType.Pickup); // calls Playersound Manager to play the pickup sound
+
+        if (currentHoldWeapon_Obj is Gun)
+        ((Gun)currentHoldWeapon_Obj).currentBullets = Pickedweapon.getBulletCount();
 
     }
     #endregion
@@ -236,9 +251,10 @@ public class Weapon_Manager : MonoBehaviour
             var throwWeapon_Sci = obj.GetComponent<PickUpGun_Script>();
 
             // gets the object that will be droped weapon To Drop
-            var temp = holdWeapons.TryGetValue(id, out Gun gun) ? gun : currentHoldWeapon_Obj;
-
-            throwWeapon_Sci.saveGunData(temp.gunData, temp.currentBullets);
+            var temp = holdWeapons.TryGetValue(id, out Weapons weapon) ? weapon : currentHoldWeapon_Obj;    
+            if (temp is Gun)
+                throwWeapon_Sci.saveGunData(temp.gunData, ((Gun)temp).currentBullets);
+            
             throwWeapon_Sci.throwWeapon(playercontroller.transform);
 
             // changing hold Weapon After Thrown

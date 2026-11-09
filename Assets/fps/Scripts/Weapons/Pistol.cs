@@ -34,12 +34,10 @@ public class Pistol : Gun
             return;
         }
 
-        if (fireDelayCounter < gunData.FireRate)
+        if (AttackRateCounter < gunData.FireRate)
         {
             return;
         }
-
-
         if (isReloading) return;
 
         shoot();
@@ -50,13 +48,14 @@ public class Pistol : Gun
     void Update()
     {        
         tryShoot();
-        UpdateAmmoDisplay();
+       
     }
 
     
     public override void tryShoot()
     {
-        fireDelayCounter += Time.deltaTime;        
+        AttackRateCounter += Time.deltaTime;
+        //base.tryShoot();
     }
 
 
@@ -64,16 +63,19 @@ public class Pistol : Gun
     public override void shoot()
     {
         --currentBullets;
+         UpdateAmmoDisplay();
+        
 
-        // sound script
-
-        fireDelayCounter = 0;
+        AttackRateCounter = 0;
 
         bool applySpread = playerController != null && playerController.weaponAnimation_Speed > 0.1f;
         Ray ray = BuildAimRay(applySpread);
 
         Bullet_script bullet = Instantiate(bulletPrefab, muzzleFlashPosition.position, Quaternion.identity)
            .GetComponent<Bullet_script>();
+
+        callFireAnimation();
+       
 
         if (Physics.Raycast(ray, out RaycastHit hit, gunData.MaxTravelDistance, gunData.shootlayer))
         {

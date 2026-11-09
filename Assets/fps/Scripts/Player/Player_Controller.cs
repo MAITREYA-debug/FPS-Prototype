@@ -117,14 +117,14 @@ public class Player_Controller : MonoBehaviour
     }
 #endregion
 
-    #region - Movement -
+    #region - Player State manager of speed and position -
     void StateManager()
     {
         Vector2 moveInput = InputManager.instance.MoveInput;
         _isRunning = InputManager.instance.isSprinting && moveInput.y > 0f;
         _isCrouching = InputManager.instance.isCrouching;
         isAimingIn = InputManager.instance.isAimingIn;
-        isAimingIn = true;
+      
 
         if (isFalling)
         {
@@ -133,9 +133,9 @@ public class Player_Controller : MonoBehaviour
         else
         {
             currentSpeedState = isAimingIn ? SpeedState.aimingState
-                : _isCrouching ? SpeedState.crouchState
-                : _isRunning ? SpeedState.runState
-                : SpeedState.walkState;
+                               : _isCrouching ? SpeedState.crouchState
+                               : _isRunning ? SpeedState.runState
+                               : SpeedState.walkState;
         }
 
         switch (currentSpeedState)
@@ -173,6 +173,7 @@ public class Player_Controller : MonoBehaviour
         {
             if (_jump)
             {
+                
                 _verticalVelocity = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
                 _jump = false;
             }
@@ -195,6 +196,17 @@ public class Player_Controller : MonoBehaviour
         {
             weaponAnimation_Speed = 0f;
         }
+
+        if (weaponAnimation_Speed > 0 && currentSpeedMultiplier == runSpeed && isGrounded)
+        {
+            PlayerSoundManager.instance.Play(Sound.SoundType.Running);
+        }
+         else if (weaponAnimation_Speed > 0 && currentSpeedMultiplier == walkSpeed && isGrounded)
+        {
+            PlayerSoundManager.instance.Play(Sound.SoundType.Footsteps);
+        }
+
+
     }
     #endregion
 
@@ -240,6 +252,7 @@ public class Player_Controller : MonoBehaviour
 
         if (isGrounded && _jump && weapon_Controller != null)
         {
+            PlayerSoundManager.instance.Play(Sound.SoundType.Jump);
             weapon_Controller.onjump();
         }
 
@@ -261,6 +274,7 @@ public class Player_Controller : MonoBehaviour
         if (!wasGrounded && isGrounded)
         {
             isFalling = false;
+            PlayerSoundManager.instance.Play(Sound.SoundType.Landing);
             weapon_Controller?.OnLanding();
         }
 
@@ -283,6 +297,7 @@ public class Player_Controller : MonoBehaviour
 
             if (obj != null)
             {
+                PlayerSoundManager.instance.Play(Sound.SoundType.WeaponPickUp);
                 Weapon_Manager.instance.PickUp_Weapon(obj);
                 Debug.Log("Weapon Destroyed " + obj.name);
                 Destroy(obj.gameObject);

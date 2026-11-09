@@ -30,7 +30,7 @@ public class Rifle : Gun
     void Update()
     {
        tryShoot();
-       UpdateAmmoDisplay();
+       
     }
 
     public override void tryShoot()
@@ -41,19 +41,23 @@ public class Rifle : Gun
 
     public override void shoot()
     {
+
         Debug.Log("riffle fire");
 
         --currentBullets;
-        fireDelayCounter = 0;
+        UpdateAmmoDisplay();
 
-        bool applySpread = playerController.weaponAnimation_Speed > 0.1f;
-        Ray ray = BuildAimRay(applySpread);
+        AttackRateCounter = 0;
 
-        var flash = Instantiate(muzzleFlash, muzzleFlashPosition.position, muzzleFlashPosition.rotation, muzzleFlashPosition);
-        Destroy(flash, 1f);
+        bool applySpread = playerController.weaponAnimation_Speed > 0.1f ? true : false;
+        Ray ray = BuildAimRay(applySpread);        
 
         Bullet_script bullet = Instantiate(bulletPrefab, muzzleFlashPosition.position, Quaternion.identity)
            .GetComponent<Bullet_script>();
+        
+        callFireAnimation();
+        
+
 
         if (Physics.Raycast(ray, out RaycastHit hit, gunData.MaxTravelDistance, gunData.shootlayer))
         {

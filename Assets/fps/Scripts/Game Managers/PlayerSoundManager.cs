@@ -19,6 +19,8 @@ public class PlayerSoundManager : MonoBehaviour
         public bool notifyAI = false;
         public bool Randompitch  = false;
         public bool RandomClipsPlay = false;
+        public float clipPlayRate= 0.1f;
+        public bool useClipRate = false;
 
         [HideInInspector]
         public int lastClipIndex = -1;
@@ -34,6 +36,8 @@ public class PlayerSoundManager : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
+
         // data structure to store sounds profile for each sound type, for quick lookup
         soundLookup = new Dictionary<Sound.SoundType, SoundProfile>(
             soundProfiles.Length
@@ -58,7 +62,7 @@ public class PlayerSoundManager : MonoBehaviour
         if (source == null) // source is the component that plays the sound
             source = GetComponent<AudioSource>();
     }
-
+    float _tempCliprateCounter = 0f;
     public void Play(Sound.SoundType type)
     {
         if (source == null)
@@ -77,9 +81,24 @@ public class PlayerSoundManager : MonoBehaviour
 
         if (clip == null)
             return;
-
-        // Play without interrupting sounds already playing.
-        source.PlayOneShot(clip, profile.volume);
+      
+        if (profile.useClipRate)
+        {
+            // play with a delay between clips, to avoid overlapping sounds
+            _tempCliprateCounter += Time.deltaTime;
+            if (_tempCliprateCounter < profile.clipPlayRate)
+            {
+                return;
+            }
+            _tempCliprateCounter = 0f;
+            source.PlayOneShot(clip, profile.volume);
+        }
+        else
+        {
+            // Play without interrupting sounds already playing.
+            source.PlayOneShot(clip, profile.volume);
+        }
+            
 
         // Notify the AI only for sounds configured to be detectable.
         if (profile.notifyAI)

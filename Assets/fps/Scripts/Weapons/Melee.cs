@@ -1,11 +1,13 @@
 using UnityEngine;
 
-public class Melee : Gun    
-{
+public class Melee : Weapons    
+{ 
 
-  
-
-  
+    public void Awake()
+    {
+        base.Awake();
+        WeaponRightHandpos = gameObject.transform.Find("uploads_files_4687838_KNIFE_VAR2/WeaponRight_Hand");
+    }
 
     #region - onEnable/onDisable -
     void OnEnable()
@@ -25,62 +27,62 @@ public class Melee : Gun
     {
         
     }
+    public void callFireAnimation()
+    {
+
+        if (animator != null)
+        {
+            Debug.Log("fire ");
+            animator.SetTrigger("fire");
+        }
+
+        PlayerSoundManager.instance.Play(Sound.SoundType.Melee);
+    }
+
+    public void attack()
+    {
+
+        AttackRateCounter = 0;
+        callFireAnimation();
+
+
+        Ray ray = Playercamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
+
+        if (Physics.Raycast(ray, out RaycastHit hit, gunData.MaxTravelDistance, gunData.shootlayer))
+        {
+            // Debug.Log("hit " + hit.collider.name);
+        }
+
+    }
 
 
 
     private void Firepress()
     {
-        Debug.Log("fire ");
-        if (!InputManager.instance.isFiring || currentBullets <= 0)
+         
+
+
+        if (AttackRateCounter < gunData.FireRate)
         {
             return;
-        }
+        }     
 
-        if (fireDelayCounter < gunData.FireRate)
-        {
-            return;
-        }
-
-        if (isReloading) return;
-
-        shoot();
+        attack();
     }
 
     
 
     void Update()
     {
-        tryShoot();
-        UpdateAmmoDisplay();
-    }
-
-    
-    public override void tryShoot()
-    {
-        fireDelayCounter += Time.deltaTime;        
-    }
-
-
-
-    public override void shoot()
-    {
-        --currentBullets;
-        fireDelayCounter = 0;
-
-        
-        Ray ray = BuildAimRay(false);        
-
-
-        if (Physics.Raycast(ray, out RaycastHit hit, gunData.MaxTravelDistance, gunData.shootlayer))
+        AttackRateCounter += Time.deltaTime;
+        if(AttackRateCounter > 100)
         {
-            if (hitImpact != null)
-            {
-                var hitEffect = Instantiate(hitImpact, hit.point, Quaternion.LookRotation(hit.normal));
-                Destroy(hitEffect, 10f);
-            }            
+            AttackRateCounter = gunData.FireRate;
         }
-       
 
-        
     }
+
+
+   
 }

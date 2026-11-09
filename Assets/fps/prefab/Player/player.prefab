@@ -1364,12 +1364,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2787898844381204162}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.37456363, y: -0.49692288, z: -0.501171, w: 0.60132974}
-  m_LocalPosition: {x: -0.00040000677, y: -0.03019993, z: -0.099800006}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0.8522414, y: -0.3691373, z: -0.088085145, w: 0.36008805}
+  m_LocalPosition: {x: 2.4267192, y: 1.009193, z: -1.1057596}
+  m_LocalScale: {x: 20, y: 20, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6994237157781154960}
+  m_Father: {fileID: 1483462810209713262}
   m_LocalEulerAnglesHint: {x: -2.729, y: -76.95, z: -77.449}
 --- !u!1 &2869026648960149930
 GameObject:
@@ -1567,18 +1567,18 @@ MonoBehaviour:
   gunData: {fileID: 11400000, guid: 32f7fec91364c0344a4d6510790809f9, type: 2}
   playerController: {fileID: 0}
   Playercamera: {fileID: 0}
-  AmmoTxt: {fileID: 0}
   animator: {fileID: 0}
   playerAnimationtype: {fileID: 9100000, guid: 2409dd14bedb7264fa7573564665cd56, type: 2}
   WeaponLeftHandpos: {fileID: 0}
   WeaponRightHandpos: {fileID: 0}
+  fireDelayCounter: 0
+  AmmoTxt: {fileID: 0}
   bulletPrefab: {fileID: 4267073684437714169, guid: dee6103b168848741b030445982bf62f, type: 3}
   muzzleFlash: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
   hitImpact: {fileID: 1557088843730042366, guid: 15cd8708b1b7b4a47be1dfbf9f9ed794, type: 3}
   muzzleFlashPosition: {fileID: 0}
   ScopePosition: {fileID: 0}
   currentBullets: 0
-  fireDelayCounter: 0
   isReloading: 0
 --- !u!1 &3168630865748858975
 GameObject:
@@ -2280,6 +2280,7 @@ Transform:
   - {fileID: 317071814357652940}
   - {fileID: 6725056056413634014}
   - {fileID: 7822435790282450205}
+  - {fileID: 1263493150465812581}
   m_Father: {fileID: 6994237157781154960}
   m_LocalEulerAnglesHint: {x: 0, y: 59.6, z: -56.8}
 --- !u!1 &3922662615098609695
@@ -2957,18 +2958,18 @@ MonoBehaviour:
   gunData: {fileID: 11400000, guid: c8bb296b0d4a0004081ac8bcf8292d9a, type: 2}
   playerController: {fileID: 0}
   Playercamera: {fileID: 0}
-  AmmoTxt: {fileID: 0}
   animator: {fileID: 0}
   playerAnimationtype: {fileID: 9100000, guid: 2409dd14bedb7264fa7573564665cd56, type: 2}
   WeaponLeftHandpos: {fileID: 0}
   WeaponRightHandpos: {fileID: 0}
+  fireDelayCounter: 0
+  AmmoTxt: {fileID: 0}
   bulletPrefab: {fileID: 4267073684437714169, guid: dee6103b168848741b030445982bf62f, type: 3}
   muzzleFlash: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
   hitImpact: {fileID: 1557088843730042366, guid: 15cd8708b1b7b4a47be1dfbf9f9ed794, type: 3}
   muzzleFlashPosition: {fileID: 0}
   ScopePosition: {fileID: 0}
   currentBullets: 0
-  fireDelayCounter: 0
   isReloading: 0
 --- !u!1 &5359989032254498323
 GameObject:
@@ -4527,18 +4528,18 @@ MonoBehaviour:
   gunData: {fileID: 11400000, guid: bb2cca8bf3183564597f4cb32be390f4, type: 2}
   playerController: {fileID: 5083395672795082241}
   Playercamera: {fileID: 2471320105891528381}
-  AmmoTxt: {fileID: 0}
   animator: {fileID: 7318689679919577132}
   playerAnimationtype: {fileID: 9100000, guid: 7cb0cbef3d051ef4483a5683fa9bed85, type: 2}
   WeaponLeftHandpos: {fileID: 0}
   WeaponRightHandpos: {fileID: 0}
+  fireDelayCounter: 0
+  AmmoTxt: {fileID: 0}
   bulletPrefab: {fileID: 4267073684437714169, guid: dee6103b168848741b030445982bf62f, type: 3}
   muzzleFlash: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
   hitImpact: {fileID: 1557088843730042366, guid: 15cd8708b1b7b4a47be1dfbf9f9ed794, type: 3}
   muzzleFlashPosition: {fileID: 0}
   ScopePosition: {fileID: 0}
   currentBullets: 0
-  fireDelayCounter: 0
   isReloading: 0
 --- !u!1 &7470019820717733964
 GameObject:
@@ -4936,7 +4937,6 @@ Transform:
   m_Children:
   - {fileID: 1483462810209713262}
   - {fileID: 26483718206523902}
-  - {fileID: 1263493150465812581}
   m_Father: {fileID: 3556206035757116668}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &5313569802476959381
@@ -4976,19 +4976,11 @@ MonoBehaviour:
   gunData: {fileID: 11400000, guid: feb5393289201b049a6e9a88fc1f2b80, type: 2}
   playerController: {fileID: 5083395672795082241}
   Playercamera: {fileID: 0}
-  AmmoTxt: {fileID: 0}
   animator: {fileID: 0}
   playerAnimationtype: {fileID: 9100000, guid: 8ff36cb048f9e9d45a3b829034399b7f, type: 2}
   WeaponLeftHandpos: {fileID: 0}
   WeaponRightHandpos: {fileID: 0}
-  bulletPrefab: {fileID: 0}
-  muzzleFlash: {fileID: 0}
-  hitImpact: {fileID: 0}
-  muzzleFlashPosition: {fileID: 0}
-  ScopePosition: {fileID: 0}
-  currentBullets: 0
   fireDelayCounter: 0
-  isReloading: 0
 --- !u!1 &8802118587919304856
 GameObject:
   m_ObjectHideFlags: 0

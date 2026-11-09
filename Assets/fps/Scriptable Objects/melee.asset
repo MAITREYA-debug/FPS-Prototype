@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: melee
   m_EditorClassIdentifier: Assembly-CSharp::GunData
   gunId: 11
-  name: knife
+  gunName: 
   shootlayer:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1
   magazine: 0
   reloadTime: 0
   FireRate: 0.2

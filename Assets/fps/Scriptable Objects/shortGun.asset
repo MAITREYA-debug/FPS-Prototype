@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: shortGun
   m_EditorClassIdentifier: Assembly-CSharp::GunData
   gunId: 103
-  name: ShortGun
+  gunName: 
   shootlayer:
     serializedVersion: 2
-    m_Bits: 0
-  magzine: 6
+    m_Bits: 1
+  magazine: 0
   reloadTime: 1.5
   FireRate: 0.6
   ErrorRange: 10

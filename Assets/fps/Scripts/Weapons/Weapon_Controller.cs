@@ -46,6 +46,7 @@ public class Weapon_Controller : MonoBehaviour
     void Awake()
     {
         weaponAnimator = GetComponentInChildren<Animator>();
+        swayPosition = Vector3.zero;
     }
 
     public void Initialization(Player_Controller playercontroller)
@@ -73,12 +74,14 @@ public class Weapon_Controller : MonoBehaviour
         }
     }
 
-    #region - Aiming -
-  
+    #region - Aiming -  
 
     void isAiming_Calculation()
     {
-
+        if(ScopeCameraPosition == null)
+        {
+            return;
+        }
         bool isAimingIn = InputManager.instance.isAimingIn;
         Vector3 target = transform.position;
 

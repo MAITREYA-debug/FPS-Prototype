@@ -10,10 +10,12 @@ public class Sound
         Footsteps,
         Running,
         Jump,
-        Land,
-        Pickup,
+        Landing,
+        WeaponPickUp,
+        WeaponSwitch,
         Reload,
         Melee
+
     }
 
 

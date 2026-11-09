@@ -3,17 +3,12 @@ using TMPro;
 //using UnityEditor.Animations;
 using UnityEngine;
 
-public abstract class Gun : MonoBehaviour
+public abstract class Gun : Weapons
 {
+   
 
-    [SerializeField] public GunData gunData;
-    [SerializeField] public Player_Controller playerController;
-    [SerializeField] public Camera Playercamera;
     [SerializeField] TextMeshProUGUI AmmoTxt;
-    [SerializeField] public Animator animator;
-    [SerializeField] public RuntimeAnimatorController playerAnimationtype;
-    [SerializeField] public Transform WeaponLeftHandpos;
-    [SerializeField] public Transform WeaponRightHandpos;
+
 
     [Header("Firing")]
     [SerializeField] public GameObject bulletPrefab;
@@ -26,25 +21,24 @@ public abstract class Gun : MonoBehaviour
 
     [Header("Current gun")]
     public int currentBullets = 0;
-    public float fireDelayCounter = 0;
+    
     public bool isReloading = false;
+    
 
     public void Awake()
     {
-        playerController = transform.root.GetComponent<Player_Controller>();
-        Playercamera = playerController.GetComponentInChildren<Camera>();
-        WeaponLeftHandpos = gameObject.transform.Find("WeaponLeft_Hand");
-        WeaponRightHandpos = gameObject.transform.Find("WeaponRight_Hand");
+        base.Awake();
 
         currentBullets = gunData.magazine;
-
         muzzleFlashPosition = this.transform.Find("muzzleFlashPosition");
-        if(muzzleFlashPosition == null)
+
+
+
+        if (muzzleFlashPosition == null)
         {
             Debug.LogError("MuzzleFlashPosition not found in " + this.name);
-        }
+        }      
 
-        animator = transform.GetComponent<Animator>();
         ScopePosition = transform.Find("InSight").GetComponent<Transform>();
     }
 
@@ -53,17 +47,19 @@ public abstract class Gun : MonoBehaviour
     virtual
     public void tryShoot()
     {
-        fireDelayCounter += Time.deltaTime;
+        AttackRateCounter += Time.deltaTime;
 
         if (!InputManager.instance.isFiring || currentBullets <= 0) return;
 
-        if (fireDelayCounter < gunData.FireRate) return;
+        if (AttackRateCounter < gunData.FireRate) return;
       
         if (isReloading) return;
 
         shoot();
 
     }
+
+    
 
     public abstract void shoot();
 
@@ -98,14 +94,36 @@ public abstract class Gun : MonoBehaviour
     {
 
         isReloading = true;
-        PlayerSoundManager.instance.Play(Sound.SoundType.Reload);
 
         yield return new WaitForSeconds(gunData.reloadTime);
         currentBullets = gunData.magazine;
         isReloading = false;
+        PlayerSoundManager.instance.Play(Sound.SoundType.Reload);
+        UpdateAmmoDisplay();
 
         Debug.Log("Gun is reloaded");
 
+    }
+
+    public void callFireAnimation()
+    {
+
+        if (animator != null)
+        {
+            animator.SetTrigger("fire");
+        }
+
+        var flash = Instantiate(muzzleFlash, muzzleFlashPosition.position, muzzleFlashPosition.rotation, muzzleFlashPosition);
+        Destroy(flash, 1f);
+        PlayerSoundManager.instance.Play(Sound.SoundType.WeaponBullets);
+    }
+
+    public void callReloadAnimation()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger("Reload");
+        }       
     }
 
     public void UpdateAmmoDisplay()

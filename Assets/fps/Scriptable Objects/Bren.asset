@@ -16,9 +16,9 @@ MonoBehaviour:
   gunName: 
   shootlayer:
     serializedVersion: 2
-    m_Bits: 246
+    m_Bits: 1
   magazine: 40
-  reloadTime: 1
+  reloadTime: 0.8
   FireRate: 0.15
   ErrorRange: 20
   MaxTravelDistance: 100

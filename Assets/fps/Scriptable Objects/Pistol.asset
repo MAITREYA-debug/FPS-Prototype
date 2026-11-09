@@ -18,7 +18,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   magazine: 9
-  reloadTime: 1
+  reloadTime: 0.9
   FireRate: 0.2
   ErrorRange: 20
   MaxTravelDistance: 50
