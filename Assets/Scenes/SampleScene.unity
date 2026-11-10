@@ -2588,9 +2588,29 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 502430216}
     - target: {fileID: 8266252418784061159, guid: 2ccbf05c72de7af4e9b31df0aa87cd1d, type: 3}
+      propertyPath: recoilX
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8266252418784061159, guid: 2ccbf05c72de7af4e9b31df0aa87cd1d, type: 3}
+      propertyPath: recoilY
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8266252418784061159, guid: 2ccbf05c72de7af4e9b31df0aa87cd1d, type: 3}
       propertyPath: animator
       value: 
       objectReference: {fileID: 581566816}
+    - target: {fileID: 8266252418784061159, guid: 2ccbf05c72de7af4e9b31df0aa87cd1d, type: 3}
+      propertyPath: increaseRecoil
+      value: 0.77
+      objectReference: {fileID: 0}
+    - target: {fileID: 8266252418784061159, guid: 2ccbf05c72de7af4e9b31df0aa87cd1d, type: 3}
+      propertyPath: recoilRecovery
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8266252418784061159, guid: 2ccbf05c72de7af4e9b31df0aa87cd1d, type: 3}
+      propertyPath: recoilSnappiness
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 8487645111381498508, guid: 2ccbf05c72de7af4e9b31df0aa87cd1d, type: 3}
       propertyPath: m_Layer
       value: 6

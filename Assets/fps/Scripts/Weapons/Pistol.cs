@@ -3,7 +3,7 @@ using UnityEngine;
 public class Pistol : Gun
 {
 
-
+    
 
     #region - onEnable/onDisable -
     void OnEnable()
@@ -55,16 +55,26 @@ public class Pistol : Gun
     public override void tryShoot()
     {
         AttackRateCounter += Time.deltaTime;
+
+        if(!InputManager.instance.isFiring )
+        {
+            bulletfiredcounter = 0;
+            tempRecoilX = 0;
+        }
         //base.tryShoot();
     }
 
+   
 
+
+    
 
     public override void shoot()
     {
         --currentBullets;
          UpdateAmmoDisplay();
-        
+        HandleBulletRecoil();
+
 
         AttackRateCounter = 0;
 
@@ -74,7 +84,7 @@ public class Pistol : Gun
         Bullet_script bullet = Instantiate(bulletPrefab, muzzleFlashPosition.position, Quaternion.identity)
            .GetComponent<Bullet_script>();
 
-        callFireAnimation();
+        callFireEffects();
        
 
         if (Physics.Raycast(ray, out RaycastHit hit, gunData.MaxTravelDistance, gunData.shootlayer))

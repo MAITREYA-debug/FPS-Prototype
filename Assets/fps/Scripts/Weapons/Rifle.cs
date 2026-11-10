@@ -46,6 +46,7 @@ public class Rifle : Gun
 
         --currentBullets;
         UpdateAmmoDisplay();
+        HandleBulletRecoil();
 
         AttackRateCounter = 0;
 
@@ -55,8 +56,7 @@ public class Rifle : Gun
         Bullet_script bullet = Instantiate(bulletPrefab, muzzleFlashPosition.position, Quaternion.identity)
            .GetComponent<Bullet_script>();
         
-        callFireAnimation();
-        
+        callFireEffects();     
 
 
         if (Physics.Raycast(ray, out RaycastHit hit, gunData.MaxTravelDistance, gunData.shootlayer))

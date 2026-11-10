@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using TMPro;
 //using UnityEditor.Animations;
 using UnityEngine;
@@ -20,14 +21,27 @@ public abstract class Gun : Weapons
 
 
     [Header("Current gun")]
-    public int currentBullets = 0;
-    
+    public int currentBullets = 0;    
     public bool isReloading = false;
-    
+
+
+    [Header("Weapon Recoil")]
+    [SerializeField] private float recoilX = 2f;       // Vertical recoil
+    [SerializeField] private float recoilY = 0.5f;     // Horizontal recoil
+    [SerializeField] private float recoilRecovery = 5f;
+    [SerializeField] private float recoilSnappiness = 10f;
+
+
+    [SerializeField] public int bulletfiredcounter = 0;
+    [SerializeField] public float increaseRecoil = 0.2f;
+    [SerializeField] public float tempRecoilX = 0;
+
 
     public void Awake()
     {
         base.Awake();
+
+        
 
         currentBullets = gunData.magazine;
         muzzleFlashPosition = this.transform.Find("muzzleFlashPosition");
@@ -42,16 +56,30 @@ public abstract class Gun : Weapons
         ScopePosition = transform.Find("InSight").GetComponent<Transform>();
     }
 
-      
+    private void OnEnable()
+    {
+         playerController.setGunRecoilData( recoilY, recoilRecovery, recoilSnappiness);
+        tempRecoilX = recoilX;        
+
+    }
+
+
 
     virtual
     public void tryShoot()
     {
         AttackRateCounter += Time.deltaTime;
 
-        if (!InputManager.instance.isFiring || currentBullets <= 0) return;
+        if (!InputManager.instance.isFiring || currentBullets <= 0)
+        {
+            bulletfiredcounter = 0;
+            tempRecoilX = recoilX;
+            return;
+        }
 
-        if (AttackRateCounter < gunData.FireRate) return;
+
+
+            if (AttackRateCounter < gunData.FireRate) return;
       
         if (isReloading) return;
 
@@ -105,13 +133,28 @@ public abstract class Gun : Weapons
 
     }
 
-    public void callFireAnimation()
+    public void HandleBulletRecoil()
+    {
+        bulletfiredcounter++;
+
+        if (bulletfiredcounter > 2)
+            tempRecoilX += increaseRecoil;
+        else tempRecoilX = recoilX;
+
+        playerController.ApplyRecoil(tempRecoilX);
+    }
+
+
+    public void callFireEffects()
     {
 
         if (animator != null)
         {
             animator.SetTrigger("fire");
         }
+               
+        
+
 
         var flash = Instantiate(muzzleFlash, muzzleFlashPosition.position, muzzleFlashPosition.rotation, muzzleFlashPosition);
         Destroy(flash, 1f);

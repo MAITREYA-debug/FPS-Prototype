@@ -211,6 +211,15 @@ public class Player_Controller : MonoBehaviour
     #endregion
 
     #region - Look -
+
+    private Vector2 currentRecoil;
+    private Vector2 targetRecoil;
+
+    private float recoilX = 2f;       // Vertical recoil
+    private float recoilY = 0.5f;     // Horizontal recoil
+    private float recoilRecovery = 5f;
+    private float recoilSnappiness = 10f;
+
     void HandleLook()
     {
         Vector2 mouseInput = InputManager.instance.LookInput * _mouseSensitivity;
@@ -220,7 +229,52 @@ public class Player_Controller : MonoBehaviour
         _pitch -= mouseInput.y;
         _pitch = Mathf.Clamp(_pitch, -_maxlookAngle, _maxlookAngle);
         cameraHolder.localRotation = Quaternion.Euler(_pitch, 0, 0);
+
+        HandleRecoil();
+
+        // Apply recoil to camera
+        cameraHolder.localRotation = Quaternion.Euler(
+            _pitch - currentRecoil.x,
+            currentRecoil.y,
+            0f
+        );
     }
+
+    public void setGunRecoilData( float recoilY, float recoilRecovery, float recoilSnappiness)
+    {
+               
+        this.recoilY = recoilY;     
+        this.recoilRecovery = recoilRecovery;
+        this.recoilSnappiness = recoilSnappiness;
+    }
+
+    public void ApplyRecoil(float recoileX)
+    {
+        
+        targetRecoil += new Vector2(
+            recoileX, 
+            Random.Range(-recoilY, recoilY)
+        );
+    }
+
+    void HandleRecoil()
+    {
+        // Smoothly move towards the recoil target
+        currentRecoil = Vector2.Lerp(
+            currentRecoil,
+            targetRecoil,
+            recoilSnappiness * Time.deltaTime
+        );
+       
+
+        // Gradually recover recoil
+        targetRecoil = Vector2.Lerp(
+            targetRecoil,
+            Vector2.zero,
+            recoilRecovery * Time.deltaTime
+        );
+    }
+
     #endregion
 
     #region - Crouch -

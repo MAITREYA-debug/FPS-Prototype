@@ -47,7 +47,7 @@ public class Weapon_Manager : MonoBehaviour
     [SerializeField] int secondaryId = 101;
     [SerializeField] int meleeId = 102;
 
-    [SerializeField] Weapons currentHoldWeapon_Obj;
+    [SerializeField] public Weapons currentHoldWeapon_Obj;
 
     Transform WeaponPosition;
 
