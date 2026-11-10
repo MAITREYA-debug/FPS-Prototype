@@ -1,8 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Weapon_Controller : MonoBehaviour
-{
+public class Weapon_Controller : MonoBehaviour {
     [Header("Reference")]
     [SerializeField] Player_Controller playerController;
     bool isInitialized;
@@ -43,22 +42,18 @@ public class Weapon_Controller : MonoBehaviour
 
     Quaternion newTarget;
 
-    void Awake()
-    {
+    void Awake() {
         weaponAnimator = GetComponentInChildren<Animator>();
         swayPosition = Vector3.zero;
     }
 
-    public void Initialization(Player_Controller playercontroller)
-    {
+    public void Initialization(Player_Controller playercontroller) {
         playerController = playercontroller;
         isInitialized = true;
     }
 
-    void Update()
-    {
-        if (!isInitialized || InputManager.instance == null || playerController == null)
-        {
+    void Update() {
+        if(!isInitialized || InputManager.instance == null || playerController == null) {
             return;
         }
 
@@ -66,8 +61,7 @@ public class Weapon_Controller : MonoBehaviour
         Sway_Idle_Calculation();
         isAiming_Calculation();
 
-        if (weaponAnimator != null)
-        {
+        if(weaponAnimator != null) {
             weaponAnimator.SetFloat("Speed", playerController.weaponAnimation_Speed);
             weaponAnimator.SetBool("Sprinting", InputManager.instance.isSprinting);
             weaponAnimator.SetBool("isGrounded", playerController.isGrounded);
@@ -76,24 +70,20 @@ public class Weapon_Controller : MonoBehaviour
 
     #region - Aiming -  
 
-    void isAiming_Calculation()
-    {
-        if(ScopeCameraPosition == null)
-        {
+    void isAiming_Calculation() {
+        if(ScopeCameraPosition == null) {
             return;
         }
         bool isAimingIn = InputManager.instance.isAimingIn;
         Vector3 target = transform.position;
 
-        if (isAimingIn && WeaponSwayObject != null && ScopeCameraPosition != null)
-        {
+        if(isAimingIn && WeaponSwayObject != null && ScopeCameraPosition != null) {
             target = playerController.cameraHolder.transform.position
                 + (WeaponSwayObject.transform.position - ScopeCameraPosition.position)
                 + playerController.cameraHolder.transform.forward * AimOffset;
         }
 
-        if (WeaponSwayObject == null)
-        {
+        if(WeaponSwayObject == null) {
             return;
         }
 
@@ -104,9 +94,8 @@ public class Weapon_Controller : MonoBehaviour
     #endregion
 
     #region - Sway_Look -
-    
-    void Sway_Look_Calculation()
-    {
+
+    void Sway_Look_Calculation() {
         bool isAimingIn = InputManager.instance.isAimingIn;
         lookInput = InputManager.instance.LookInput;
         MovementInput = InputManager.instance.MoveInput;
@@ -133,41 +122,35 @@ public class Weapon_Controller : MonoBehaviour
     #endregion
 
     #region - Sway idle -
-    void Sway_Idle_Calculation()
-    {
+    void Sway_Idle_Calculation() {
         bool isAimingIn = InputManager.instance.isAimingIn;
         float scale = isAimingIn ? swayScale * 4f : swayScale;
         var targetPos = LissajousCurve(swayTime, swayAmountA, swayAmountB) / scale;
 
         swayTime += Time.deltaTime;
-        if (swayTime > 6.3f)
-        {
+        if(swayTime > 6.3f) {
             swayTime = 0f;
         }
 
         swayPosition = Vector3.Lerp(swayPosition, targetPos, Time.deltaTime * swaylerpSpeed);
     }
 
-    Vector3 LissajousCurve(float Time, float A, float B)
-    {
+    Vector3 LissajousCurve(float Time, float A, float B) {
         return new Vector3(Mathf.Sin(Time), A * Mathf.Sin(B * Time + Mathf.PI));
     }
 
     #endregion
 
     #region - jump Events -
-    public void onjump()
-    {
+    public void onjump() {
         weaponAnimator?.SetTrigger("OnJump");
     }
 
-    public void Falling()
-    {
+    public void Falling() {
         weaponAnimator?.SetTrigger("Falling");
     }
 
-    public void OnLanding()
-    {
+    public void OnLanding() {
         weaponAnimator?.SetTrigger("OnLanding");
     }
     #endregion
@@ -175,8 +158,7 @@ public class Weapon_Controller : MonoBehaviour
 
     #region - Weapon Changed Values Change -
 
-    public void SetValuesForWeapon(Transform ScopePosition, Animator currentAnimator)
-    {
+    public void SetValuesForWeapon(Transform ScopePosition, Animator currentAnimator) {
         ScopeCameraPosition = ScopePosition;
         weaponAnimator = currentAnimator;
     }

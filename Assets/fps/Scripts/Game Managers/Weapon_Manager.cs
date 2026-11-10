@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
-public class Weapon_Manager : MonoBehaviour
-{
+public class Weapon_Manager : MonoBehaviour {
 
     /* ++++++++     weapon manager ++++++    
         holds all the Weapons object
@@ -30,7 +29,7 @@ public class Weapon_Manager : MonoBehaviour
 
     RigBuilder rigBuilder;
 
-    
+
     [SerializeField] WeaponType currentWeaponType;
     [SerializeField] List<GameObject> Use_WeaponPool = new List<GameObject>();
     [SerializeField] Dictionary<int, Weapons> holdWeapons = new Dictionary<int, Weapons>();
@@ -53,8 +52,7 @@ public class Weapon_Manager : MonoBehaviour
 
 
 
-    public enum WeaponType
-    {
+    public enum WeaponType {
         primary = 1,
         secondary,
         melee
@@ -62,8 +60,7 @@ public class Weapon_Manager : MonoBehaviour
 
     #region - onEnable/ onDisable -
 
-    private void OnEnable()
-    {
+    private void OnEnable() {
         InputManager.OnWeaponSelected += WeaponTypeSelection;
 
         InputManager.onDrop += try_DropWeapon;
@@ -71,8 +68,7 @@ public class Weapon_Manager : MonoBehaviour
 
 
 
-    private void OnDisable()
-    {
+    private void OnDisable() {
         InputManager.OnWeaponSelected -= WeaponTypeSelection;
 
         InputManager.onDrop -= try_DropWeapon;
@@ -80,38 +76,31 @@ public class Weapon_Manager : MonoBehaviour
 
     #endregion
 
-    private void Awake()
-    {
+    private void Awake() {
         instance = this;
 
         selectedWeaponId = primaryId;
         currentWeaponId = selectedWeaponId;
 
 
-        foreach (var weapon in Use_WeaponPool)
-        {
+        foreach(var weapon in Use_WeaponPool) {
             var gun = weapon.GetComponent<Weapons>();
-            if (gun != null)
-            {
+            if(gun != null) {
                 holdWeapons.Add(gun.gunData.gunId, gun);
 
-                if (gun.gunData.gunId == currentWeaponId)
-                {
+                if(gun.gunData.gunId == currentWeaponId) {
                     currentHoldWeapon_Obj = gun;
                     currentHoldWeapon_Obj.gameObject.SetActive(true);
                 }
-                else
-                {
+                else {
                     gun.gameObject.SetActive(false);
                 }
             }
         }
 
-        foreach (var weapon in Throw_WeaponPool)
-        {
+        foreach(var weapon in Throw_WeaponPool) {
             var gun = weapon.GetComponent<PickUpGun_Script>();
-            if (gun != null)
-            {
+            if(gun != null) {
                 throwWeapons.Add(gun.gunData.gunId, gun);
             }
         }
@@ -123,8 +112,7 @@ public class Weapon_Manager : MonoBehaviour
     }
 
 
-    private void Update()
-    {
+    private void Update() {
         leftarmpos.position = currentHoldWeapon_Obj.WeaponLeftHandpos.position;
         leftarmpos.rotation = currentHoldWeapon_Obj.WeaponLeftHandpos.rotation;
 
@@ -134,27 +122,24 @@ public class Weapon_Manager : MonoBehaviour
     }
 
 
-#region - Handle Weapon Selection input -
+    #region - Handle Weapon Selection input -
 
-    private void WeaponTypeSelection(int weaponType_no)
-    {
-        if (weaponType_no == 1 && primaryId == 0 || weaponType_no == 2 && secondaryId == 0) return;
-        if (currentWeaponType == (WeaponType)weaponType_no) return;       
+    private void WeaponTypeSelection(int weaponType_no) {
+        if(weaponType_no == 1 && primaryId == 0 || weaponType_no == 2 && secondaryId == 0) return;
+        if(currentWeaponType == (WeaponType)weaponType_no) return;
 
         currentWeaponType = (WeaponType)weaponType_no;
         SetHoldWeapon_ID();
         act_Deactivate_Weapon();
     }
 
-#endregion
+    #endregion
 
-#region - set Hold Weapon Type -
-    void SetHoldWeapon_ID()
-    {
+    #region - set Hold Weapon Type -
+    void SetHoldWeapon_ID() {
         Debug.Log("Setting Hold Weapon Type " + currentWeaponType);
 
-        switch (currentWeaponType)
-        {
+        switch(currentWeaponType) {
             case WeaponType.primary:
                 selectedWeaponId = primaryId;
                 break;
@@ -168,16 +153,14 @@ public class Weapon_Manager : MonoBehaviour
                 break;
         }
     }
-#endregion
+    #endregion
 
-#region - activate Selected Weapon -
+    #region - activate Selected Weapon -
 
-    void act_Deactivate_Weapon()
-    { 
+    void act_Deactivate_Weapon() {
 
         Debug.Log("Weapon Activate deactivate ");
-        if (selectedWeaponId == 0)
-        {
+        if(selectedWeaponId == 0) {
             selectedWeaponId = currentWeaponId;
             return;
         }
@@ -185,14 +168,12 @@ public class Weapon_Manager : MonoBehaviour
         currentWeaponId = selectedWeaponId;
         currentHoldWeapon_Obj.gameObject.SetActive(false);
 
-        currentHoldWeapon_Obj = holdWeapons.TryGetValue(selectedWeaponId, out Weapons weapon) ? weapon : currentHoldWeapon_Obj;        
+        currentHoldWeapon_Obj = holdWeapons.TryGetValue(selectedWeaponId, out Weapons weapon) ? weapon : currentHoldWeapon_Obj;
 
-        if (currentHoldWeapon_Obj is Gun)
-        {
+        if(currentHoldWeapon_Obj is Gun) {
             weaponContoller.SetValuesForWeapon(((Gun)currentHoldWeapon_Obj).ScopePosition, currentHoldWeapon_Obj.animator);
         }
-        else
-        {
+        else {
             weaponContoller.SetValuesForWeapon(null, currentHoldWeapon_Obj.animator);
         }
 
@@ -200,7 +181,7 @@ public class Weapon_Manager : MonoBehaviour
         currentWeaponId = selectedWeaponId;
 
         ChangeAnimatorController(currentHoldWeapon_Obj.playerAnimationtype, true);
-        if(PlayerSoundManager.instance != null){
+        if(PlayerSoundManager.instance != null) {
             PlayerSoundManager.instance.Play(Sound.SoundType.WeaponSwitch);
 
         }
@@ -208,40 +189,35 @@ public class Weapon_Manager : MonoBehaviour
 
     }
 
-    #endregion   
+    #endregion
 
-#region - picked Weapon set -
-    public void PickUp_Weapon(PickUpGun_Script Pickedweapon)
-    {
+    #region - picked Weapon set -
+    public void PickUp_Weapon(PickUpGun_Script Pickedweapon) {
         Debug.Log("Weapon Picked Up in WeaponManager ");
         setOrNull_AnyWeapon(Pickedweapon.gunData.gunId);
 
         //PlayerSoundManager.instance.Play(Sound.SoundType.Pickup); // calls Playersound Manager to play the pickup sound
 
-        if (currentHoldWeapon_Obj is Gun)
-        ((Gun)currentHoldWeapon_Obj).currentBullets = Pickedweapon.getBulletCount();
+        if(currentHoldWeapon_Obj is Gun)
+            ((Gun)currentHoldWeapon_Obj).currentBullets = Pickedweapon.getBulletCount();
 
     }
     #endregion
 
-#region - Drop Weapon -  
-    public void try_DropWeapon()
-    {
+    #region - Drop Weapon -  
+    public void try_DropWeapon() {
 
-        if (currentWeaponType == WeaponType.melee)
-        {
+        if(currentWeaponType == WeaponType.melee) {
             Debug.Log("Cannot drop melee weapon");
             return;
         }
 
         dropWeapon(currentHoldWeapon_Obj.gunData.gunId);
-      
+
     }
 
-    public void dropWeapon(int id)
-    {
-        if (throwWeapons.TryGetValue(id, out PickUpGun_Script pickupGun))
-        {
+    public void dropWeapon(int id) {
+        if(throwWeapons.TryGetValue(id, out PickUpGun_Script pickupGun)) {
             Debug.Log("Dropping Weapon " + pickupGun.gunData.gunId);
 
             // Weapon is Created in the Scene
@@ -251,10 +227,11 @@ public class Weapon_Manager : MonoBehaviour
             var throwWeapon_Sci = obj.GetComponent<PickUpGun_Script>();
 
             // gets the object that will be droped weapon To Drop
-            var temp = holdWeapons.TryGetValue(id, out Weapons weapon) ? weapon : currentHoldWeapon_Obj;    
-            if (temp is Gun)
+            var temp = holdWeapons.TryGetValue(id, out Weapons weapon) ? weapon : currentHoldWeapon_Obj;
+
+            if(temp is Gun)
                 throwWeapon_Sci.saveGunData(temp.gunData, ((Gun)temp).currentBullets);
-            
+
             throwWeapon_Sci.throwWeapon(playercontroller.transform);
 
             // changing hold Weapon After Thrown
@@ -265,10 +242,9 @@ public class Weapon_Manager : MonoBehaviour
 
     #endregion
 
-#region - set value OR set null Weapons -
+    #region - set value OR set null Weapons -
 
-    void setOrNull_AnyWeapon(int WeaponId , bool SetNull = false)
-    {
+    void setOrNull_AnyWeapon(int WeaponId, bool SetNull = false) {
 
         // what does it do 
         // checks the Type of the Id
@@ -276,31 +252,25 @@ public class Weapon_Manager : MonoBehaviour
         // if SetNull is true then it will set the value to 0
         // if position are not 0 and setNull = false the DropWeapon method is run to drop that weapon and select new one;
 
-        if (SetNull)
-        {
-            if (100 < WeaponId && WeaponId < 200)
-            {
+        if(SetNull) {
+            if(100 < WeaponId && WeaponId < 200) {
                 primaryId = 0;
-               
+
             }
-            else if (0 < WeaponId && WeaponId < 10)
-            {
+            else if(0 < WeaponId && WeaponId < 10) {
                 secondaryId = 0;
-               
+
             }
             currentWeaponType = WeaponType.melee;
         }
-        else
-        {
-            if (100 < WeaponId && WeaponId < 200)
-            {
-                if (primaryId != 0) dropWeapon(primaryId);
+        else {
+            if(100 < WeaponId && WeaponId < 200) {
+                if(primaryId != 0) dropWeapon(primaryId);
                 primaryId = WeaponId;
                 currentWeaponType = WeaponType.primary;
             }
-            else if (0 < WeaponId && WeaponId < 10)
-            {
-                if (secondaryId != 0) dropWeapon(secondaryId);
+            else if(0 < WeaponId && WeaponId < 10) {
+                if(secondaryId != 0) dropWeapon(secondaryId);
                 secondaryId = WeaponId;
                 currentWeaponType = WeaponType.secondary;
             }
@@ -308,42 +278,38 @@ public class Weapon_Manager : MonoBehaviour
 
         SetHoldWeapon_ID();
         act_Deactivate_Weapon();
-      
+
 
     }
 
     #endregion
 
-#region - Weapon / Player manageing animation - 
-        public void ChangeAnimatorController(RuntimeAnimatorController animationName, bool value)
-    {
-        if (value)
-        {
-            if (animationName != null)
-            {
+    #region - Weapon / Player manageing animation - 
+    public void ChangeAnimatorController(RuntimeAnimatorController animationName, bool value) {
+        if(value) {
+            if(animationName != null) {
                 playerAnimation.runtimeAnimatorController = animationName;
-                
+
                 //leftarmpos.position = currentHoldWeapon_Obj.WeaponLeftHandpos.position;
                 //rightarmpos.position = currentHoldWeapon_Obj.WeaponRightHandpos.position;
-               
+
                 left_IK.data.target = leftarmpos;
-                Right_IK.data.target = rightarmpos; 
+                Right_IK.data.target = rightarmpos;
 
                 rigBuilder.Clear();
                 rigBuilder.Build();
 
 
             }
-            else
-            {
+            else {
                 Debug.LogError("Animator Controller is null");
-            }             
+            }
         }
 
     }
-    
 
-   
+
+
 
 
     #endregion

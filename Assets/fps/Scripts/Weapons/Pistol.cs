@@ -1,78 +1,68 @@
 using UnityEngine;
 
-public class Pistol : Gun
-{
+public class Pistol : Gun {
 
-    
+
 
     #region - onEnable/onDisable -
-    void OnEnable()
-    {
+    void OnEnable() {
         InputManager.OnReload += tryReload;
         InputManager.OnFire += Firepress;
     }
 
 
-    void OnDisable()
-    {
+
+    void OnDisable() {
         InputManager.OnReload -= tryReload;
         InputManager.OnFire -= Firepress;
     }
     #endregion
 
 
-    void Start()
-    {
+    void Start() {
         currentBullets = gunData.magazine;
     }
 
-    private void Firepress()
-    {
+    private void Firepress() {
         Debug.Log("fire ");
-        if (currentBullets <= 0)
-        {
+        if(currentBullets <= 0) {
             return;
         }
 
-        if (AttackRateCounter < gunData.FireRate)
-        {
+        if(AttackRateCounter < gunData.FireRate) {
             return;
         }
-        if (isReloading) return;
+        if(isReloading) return;
 
         shoot();
     }
 
-    
 
-    void Update()
-    {        
+
+    void Update() {
         tryShoot();
-       
+
     }
 
-    
-    public override void tryShoot()
-    {
+
+    public override void tryShoot() {
         AttackRateCounter += Time.deltaTime;
 
-        if(!InputManager.instance.isFiring )
-        {
+        if(!InputManager.instance.isFiring) {
             bulletfiredcounter = 0;
             tempRecoilX = 0;
         }
         //base.tryShoot();
     }
 
-   
 
 
-    
 
-    public override void shoot()
-    {
+
+
+    public override void shoot() {
         --currentBullets;
-         UpdateAmmoDisplay();
+        UpdateAmmoDisplay();
         HandleBulletRecoil();
 
 
@@ -85,23 +75,20 @@ public class Pistol : Gun
            .GetComponent<Bullet_script>();
 
         callFireEffects();
-       
 
-        if (Physics.Raycast(ray, out RaycastHit hit, gunData.MaxTravelDistance, gunData.shootlayer))
-        {
+
+        if(Physics.Raycast(ray, out RaycastHit hit, gunData.MaxTravelDistance, gunData.shootlayer)) {
             Debug.Log("pistol hit");
-            if (hitImpact != null)
-            {
+            if(hitImpact != null) {
                 var hitEffect = Instantiate(hitImpact, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(hitEffect, 10f);
             }
 
             bullet.Initialize(hit.point);
         }
-        else
-        {
+        else {
             bullet.Initialize(ray.origin + ray.direction * gunData.MaxTravelDistance);
         }
-        
+
     }
 }

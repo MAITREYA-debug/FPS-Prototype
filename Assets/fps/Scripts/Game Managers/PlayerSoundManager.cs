@@ -1,15 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerSoundManager : MonoBehaviour
-{
+public class PlayerSoundManager : MonoBehaviour {
     public static PlayerSoundManager instance { get; private set; }
 
     [System.Serializable]
-    public class SoundProfile
-    {
-        
-        public Sound.SoundType type; 
+    public class SoundProfile {
+
+        public Sound.SoundType type;
         public AudioClip[] clips; // all the clips for this sound type
 
         [Range(0f, 1f)]
@@ -17,9 +15,9 @@ public class PlayerSoundManager : MonoBehaviour
 
         public float range = 20f;
         public bool notifyAI = false;
-        public bool Randompitch  = false;
+        public bool Randompitch = false;
         public bool RandomClipsPlay = false;
-        public float clipPlayRate= 0.1f;
+        public float clipPlayRate = 0.1f;
         public bool useClipRate = false;
 
         [HideInInspector]
@@ -34,8 +32,7 @@ public class PlayerSoundManager : MonoBehaviour
 
 
 
-    private void Awake()
-    {
+    private void Awake() {
         instance = this;
 
         // data structure to store sounds profile for each sound type, for quick lookup
@@ -44,12 +41,11 @@ public class PlayerSoundManager : MonoBehaviour
         );
 
         // stores all the sound in soundlookup data structure 
-        foreach (SoundProfile profile in soundProfiles)
-        {
-            if (profile == null) // checks if their is no profile
+        foreach(SoundProfile profile in soundProfiles) {
+            if(profile == null) // checks if their is no profile
                 continue;
 
-            if (soundLookup.ContainsKey(profile.type)) // dupicate profile check
+            if(soundLookup.ContainsKey(profile.type)) // dupicate profile check
             {
                 Debug.LogWarning(
                     $"Duplicate sound profile: {profile.type}", this);
@@ -59,50 +55,45 @@ public class PlayerSoundManager : MonoBehaviour
             soundLookup.Add(profile.type, profile); // adds profiles with type as key and profile as values
         }
 
-        if (source == null) // source is the component that plays the sound
+        if(source == null) // source is the component that plays the sound
             source = GetComponent<AudioSource>();
     }
     float _tempCliprateCounter = 0f;
-    public void Play(Sound.SoundType type)
-    {
-        if (source == null)
+    public void Play(Sound.SoundType type) {
+        if(source == null)
             return;
 
-        if (!soundLookup.TryGetValue(type, out SoundProfile profile)) // checks for type in soundlookup if present out profile
+        if(!soundLookup.TryGetValue(type, out SoundProfile profile)) // checks for type in soundlookup if present out profile
             return;
 
         AudioClip[] clips = profile.clips; // makes a list of profile clips for playing
 
-        if (clips == null || clips.Length == 0) // checks if clips is not empty or null
+        if(clips == null || clips.Length == 0) // checks if clips is not empty or null
             return;
 
         int index = GetRandomClipIndex(profile, clips.Length); // gets a random index out of all the clips length
         AudioClip clip = clips[index];
 
-        if (clip == null)
+        if(clip == null)
             return;
-      
-        if (profile.useClipRate)
-        {
+
+        if(profile.useClipRate) {
             // play with a delay between clips, to avoid overlapping sounds
             _tempCliprateCounter += Time.deltaTime;
-            if (_tempCliprateCounter < profile.clipPlayRate)
-            {
+            if(_tempCliprateCounter < profile.clipPlayRate) {
                 return;
             }
             _tempCliprateCounter = 0f;
             source.PlayOneShot(clip, profile.volume);
         }
-        else
-        {
+        else {
             // Play without interrupting sounds already playing.
             source.PlayOneShot(clip, profile.volume);
         }
-            
+
 
         // Notify the AI only for sounds configured to be detectable.
-        if (profile.notifyAI)
-        {
+        if(profile.notifyAI) {
             Sound sound = new Sound(
                 transform.position,
                 profile.range,
@@ -113,15 +104,14 @@ public class PlayerSoundManager : MonoBehaviour
         }
     }
 
-    private int GetRandomClipIndex(SoundProfile profile, int count)
-    {
-        if (count <= 1)
+    private int GetRandomClipIndex(SoundProfile profile, int count) {
+        if(count <= 1)
             return 0;
 
         int index = Random.Range(0, count);
 
         // Prevent the same clip from playing twice consecutively.
-        if (index == profile.lastClipIndex)
+        if(index == profile.lastClipIndex)
             index = (index + Random.Range(1, count)) % count;
 
         profile.lastClipIndex = index;

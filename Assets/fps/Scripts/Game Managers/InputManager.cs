@@ -2,8 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputManager : MonoBehaviour
-{
+public class InputManager : MonoBehaviour {
     public static InputManager instance { get; private set; }
 
     private InputActions input;
@@ -24,10 +23,8 @@ public class InputManager : MonoBehaviour
     public static event Action onPickup;
     public static event Action onDrop;
 
-    private void Awake()
-    {
-        if (instance != null && instance != this)
-        {
+    private void Awake() {
+        if(instance != null && instance != this) {
             Destroy(gameObject);
             return;
         }
@@ -64,18 +61,16 @@ public class InputManager : MonoBehaviour
         input.Weapon.MeleeSeleted.performed += _ => SelectWeapon(3);
 
         input.Weapon.WeaponPickUp.performed += weaponPickup_performed;
-        input.Weapon.WeaponDrop.performed += weaponDrop_performed;      
+        input.Weapon.WeaponDrop.performed += weaponDrop_performed;
 
         input.Enable();
     }
 
 
-   
 
-    private void OnDestroy()
-    {
-        if (instance != this)
-        {
+
+    private void OnDestroy() {
+        if(instance != this) {
             return;
         }
 
@@ -86,37 +81,30 @@ public class InputManager : MonoBehaviour
         input.Disable();
     }
 
-    public void SelectWeapon(int id)
-    {
+    public void SelectWeapon(int id) {
         OnWeaponSelected?.Invoke(id);
     }
 
-    private void Reload_performed(InputAction.CallbackContext obj)
-    {
+    private void Reload_performed(InputAction.CallbackContext obj) {
         OnReload?.Invoke();
     }
 
-    private void Interact_performed(InputAction.CallbackContext obj)
-    {
+    private void Interact_performed(InputAction.CallbackContext obj) {
         OnInteract?.Invoke();
     }
 
-    private void Jump_performed(InputAction.CallbackContext obj)
-    {
+    private void Jump_performed(InputAction.CallbackContext obj) {
         OnJump?.Invoke();
-    } 
-    private void Fire1Press_performed(InputAction.CallbackContext obj)
-    {
+    }
+    private void Fire1Press_performed(InputAction.CallbackContext obj) {
         OnFire?.Invoke();
     }
 
-    private void weaponPickup_performed(InputAction.CallbackContext obj)
-    {
+    private void weaponPickup_performed(InputAction.CallbackContext obj) {
         onPickup?.Invoke();
     }
 
-    private void weaponDrop_performed(InputAction.CallbackContext obj)
-    {
+    private void weaponDrop_performed(InputAction.CallbackContext obj) {
         onDrop?.Invoke();
     }
 }

@@ -1,8 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class Player_Controller : MonoBehaviour
-{
+public class Player_Controller : MonoBehaviour {
     [Header("References")]
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Camera playerCamera;
@@ -44,10 +43,9 @@ public class Player_Controller : MonoBehaviour
     public bool isGrounded;
     public bool isAimingIn;
     [SerializeField] LayerMask InteractionMask;
-    
 
-    enum SpeedState
-    {
+
+    enum SpeedState {
         walkState,
         runState,
         crouchState,
@@ -58,27 +56,22 @@ public class Player_Controller : MonoBehaviour
     private SpeedState currentSpeedState = SpeedState.walkState;
     Vector3 offset;
 
-    void Awake()
-    {
+    void Awake() {
         weapon_Controller = GetComponentInChildren<Weapon_Controller>();
-        if (weapon_Controller == null)
-        {
+        if(weapon_Controller == null) {
             Debug.LogWarning($"{nameof(Player_Controller)} could not find {nameof(Weapon_Controller)} in children.", this);
         }
-        else
-        {
+        else {
             weapon_Controller.Initialization(this);
         }
 
         characterController = GetComponent<CharacterController>();
-        if (characterController == null)
-        {
+        if(characterController == null) {
             Debug.LogError($"{nameof(CharacterController)} is missing.", this);
         }
 
         playerCamera = this.GetComponentInChildren<Camera>();
-        if(playerCamera == null)
-        {
+        if(playerCamera == null) {
             Debug.LogError($"{nameof(Camera)} is missing.", this);
         }
 
@@ -89,10 +82,8 @@ public class Player_Controller : MonoBehaviour
     }
 
 
-    void Update()
-    {
-        if (InputManager.instance == null)
-        {
+    void Update() {
+        if(InputManager.instance == null) {
             return;
         }
 
@@ -101,45 +92,39 @@ public class Player_Controller : MonoBehaviour
         HandleMovement();
         HandleLook();
         HandleCrouch();
-    } 
+    }
 
     #region - Enable/Disable -
-    void OnEnable()
-    {
+    void OnEnable() {
         InputManager.OnJump += jump;
         InputManager.onPickup += WeaponPickInteraction;
     }
 
-    void OnDisable()
-    {
+    void OnDisable() {
         InputManager.OnJump -= jump;
         InputManager.onPickup -= WeaponPickInteraction;
     }
-#endregion
+    #endregion
 
     #region - Player State manager of speed and position -
-    void StateManager()
-    {
+    void StateManager() {
         Vector2 moveInput = InputManager.instance.MoveInput;
         _isRunning = InputManager.instance.isSprinting && moveInput.y > 0f;
         _isCrouching = InputManager.instance.isCrouching;
         isAimingIn = InputManager.instance.isAimingIn;
-      
 
-        if (isFalling)
-        {
+
+        if(isFalling) {
             currentSpeedState = SpeedState.fallState;
         }
-        else
-        {
+        else {
             currentSpeedState = isAimingIn ? SpeedState.aimingState
                                : _isCrouching ? SpeedState.crouchState
                                : _isRunning ? SpeedState.runState
                                : SpeedState.walkState;
         }
 
-        switch (currentSpeedState)
-        {
+        switch(currentSpeedState) {
             case SpeedState.crouchState:
                 currentSpeedMultiplier = crouchSpeed;
                 break;
@@ -163,22 +148,18 @@ public class Player_Controller : MonoBehaviour
     #endregion
 
     #region - Movement -
-    void HandleMovement()
-    {
+    void HandleMovement() {
         currentSpeed = speed * currentSpeedMultiplier;
         Vector2 moveInput = InputManager.instance.MoveInput;
         Vector3 move = (transform.right * moveInput.x + transform.forward * moveInput.y) * currentSpeed;
 
-        if (characterController.isGrounded)
-        {
-            if (_jump)
-            {
-                
+        if(characterController.isGrounded) {
+            if(_jump) {
+
                 _verticalVelocity = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
                 _jump = false;
             }
-            else
-            {
+            else {
                 _verticalVelocity = -2f;
             }
         }
@@ -192,17 +173,14 @@ public class Player_Controller : MonoBehaviour
             ? characterController.velocity.magnitude / currentSpeed
             : 0f;
         weaponAnimation_Speed = Mathf.Clamp(weaponAnimation_Speed, 0f, 1f);
-        if (weaponAnimation_Speed < 0.05f)
-        {
+        if(weaponAnimation_Speed < 0.05f) {
             weaponAnimation_Speed = 0f;
         }
 
-        if (weaponAnimation_Speed > 0 && currentSpeedMultiplier == runSpeed && isGrounded)
-        {
+        if(weaponAnimation_Speed > 0 && currentSpeedMultiplier == runSpeed && isGrounded) {
             PlayerSoundManager.instance.Play(Sound.SoundType.Running);
         }
-         else if (weaponAnimation_Speed > 0 && currentSpeedMultiplier == walkSpeed && isGrounded)
-        {
+        else if(weaponAnimation_Speed > 0 && currentSpeedMultiplier == walkSpeed && isGrounded) {
             PlayerSoundManager.instance.Play(Sound.SoundType.Footsteps);
         }
 
@@ -215,13 +193,12 @@ public class Player_Controller : MonoBehaviour
     private Vector2 currentRecoil;
     private Vector2 targetRecoil;
 
-    private float recoilX = 2f;       // Vertical recoil
+ 
     private float recoilY = 0.5f;     // Horizontal recoil
     private float recoilRecovery = 5f;
     private float recoilSnappiness = 10f;
 
-    void HandleLook()
-    {
+    void HandleLook() {
         Vector2 mouseInput = InputManager.instance.LookInput * _mouseSensitivity;
 
         transform.Rotate(transform.up * mouseInput.x);
@@ -240,32 +217,29 @@ public class Player_Controller : MonoBehaviour
         );
     }
 
-    public void setGunRecoilData( float recoilY, float recoilRecovery, float recoilSnappiness)
-    {
-               
-        this.recoilY = recoilY;     
+    public void setGunRecoilData(float recoilY, float recoilRecovery, float recoilSnappiness) {
+
+        this.recoilY = recoilY;
         this.recoilRecovery = recoilRecovery;
         this.recoilSnappiness = recoilSnappiness;
     }
 
-    public void ApplyRecoil(float recoileX)
-    {
-        
+    public void ApplyRecoil(float recoileX) {
+
         targetRecoil += new Vector2(
-            recoileX, 
+            recoileX,
             Random.Range(-recoilY, recoilY)
         );
     }
 
-    void HandleRecoil()
-    {
+    void HandleRecoil() {
         // Smoothly move towards the recoil target
         currentRecoil = Vector2.Lerp(
             currentRecoil,
             targetRecoil,
             recoilSnappiness * Time.deltaTime
         );
-       
+
 
         // Gradually recover recoil
         targetRecoil = Vector2.Lerp(
@@ -278,8 +252,7 @@ public class Player_Controller : MonoBehaviour
     #endregion
 
     #region - Crouch -
-    void HandleCrouch()
-    {
+    void HandleCrouch() {
         float targetHeight = _isCrouching ? _crouchHeight : _standingHeight;
 
         characterController.height = Mathf.Lerp(characterController.height, targetHeight, 10f * Time.deltaTime);
@@ -293,40 +266,33 @@ public class Player_Controller : MonoBehaviour
     #endregion
 
     #region - jump -
-    void jump()
-    {
+    void jump() {
         _jump = true;
     }
 
     float falltime;
 
-    void JumpEvents()
-    {
+    void JumpEvents() {
         isGrounded = characterController.isGrounded;
 
-        if (isGrounded && _jump && weapon_Controller != null)
-        {
+        if(isGrounded && _jump && weapon_Controller != null) {
             PlayerSoundManager.instance.Play(Sound.SoundType.Jump);
             weapon_Controller.onjump();
         }
 
-        if (!isGrounded)
-        {
+        if(!isGrounded) {
             falltime += Time.deltaTime;
 
-            if (falltime > 0.15f && characterController.velocity.y < 0 && wasGrounded && !isFalling)
-            {
+            if(falltime > 0.15f && characterController.velocity.y < 0 && wasGrounded && !isFalling) {
                 isFalling = true;
                 weapon_Controller?.Falling();
             }
         }
-        else
-        {
+        else {
             falltime = 0;
         }
 
-        if (!wasGrounded && isGrounded)
-        {
+        if(!wasGrounded && isGrounded) {
             isFalling = false;
             PlayerSoundManager.instance.Play(Sound.SoundType.Landing);
             weapon_Controller?.OnLanding();
@@ -338,19 +304,16 @@ public class Player_Controller : MonoBehaviour
     #endregion
 
 
-    public void WeaponPickInteraction()
-    {
-        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f , 0.5f , 0f));
-        
+    public void WeaponPickInteraction() {
+        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 4f , InteractionMask))
-        {
+
+        if(Physics.Raycast(ray, out RaycastHit hit, 4f, InteractionMask)) {
             Debug.Log("weapon pickup hit" + hit.collider.name);
 
             var obj = hit.collider.gameObject.GetComponent<PickUpGun_Script>();
 
-            if (obj != null)
-            {
+            if(obj != null) {
                 PlayerSoundManager.instance.Play(Sound.SoundType.WeaponPickUp);
                 Weapon_Manager.instance.PickUp_Weapon(obj);
                 Debug.Log("Weapon Destroyed " + obj.name);

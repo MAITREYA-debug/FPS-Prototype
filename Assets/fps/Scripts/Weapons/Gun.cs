@@ -4,9 +4,8 @@ using TMPro;
 //using UnityEditor.Animations;
 using UnityEngine;
 
-public abstract class Gun : Weapons
-{
-   
+public abstract class Gun : Weapons {
+
 
     [SerializeField] TextMeshProUGUI AmmoTxt;
 
@@ -21,7 +20,7 @@ public abstract class Gun : Weapons
 
 
     [Header("Current gun")]
-    public int currentBullets = 0;    
+    public int currentBullets = 0;
     public bool isReloading = false;
 
 
@@ -37,70 +36,62 @@ public abstract class Gun : Weapons
     [SerializeField] public float tempRecoilX = 0;
 
 
-    public void Awake()
-    {
+    public void Awake() {
         base.Awake();
 
-        
+
 
         currentBullets = gunData.magazine;
         muzzleFlashPosition = this.transform.Find("muzzleFlashPosition");
 
 
 
-        if (muzzleFlashPosition == null)
-        {
+        if(muzzleFlashPosition == null) {
             Debug.LogError("MuzzleFlashPosition not found in " + this.name);
-        }      
+        }
 
         ScopePosition = transform.Find("InSight").GetComponent<Transform>();
     }
 
-    private void OnEnable()
-    {
-         playerController.setGunRecoilData( recoilY, recoilRecovery, recoilSnappiness);
-        tempRecoilX = recoilX;        
+    private void OnEnable() {
+        playerController.setGunRecoilData(recoilY, recoilRecovery, recoilSnappiness);
+        UpdateAmmoDisplay();
+        tempRecoilX = recoilX;
 
     }
 
 
 
     virtual
-    public void tryShoot()
-    {
+    public void tryShoot() {
         AttackRateCounter += Time.deltaTime;
 
-        if (!InputManager.instance.isFiring || currentBullets <= 0)
-        {
+        if(!InputManager.instance.isFiring || currentBullets <= 0) {
             bulletfiredcounter = 0;
             tempRecoilX = recoilX;
             return;
         }
 
+        if(AttackRateCounter < gunData.FireRate) return;
 
-
-            if (AttackRateCounter < gunData.FireRate) return;
-      
-        if (isReloading) return;
+        if(isReloading) return;
 
         shoot();
 
     }
 
-    
+
 
     public abstract void shoot();
 
     //public abstract void shootSound();
 
 
-    public Ray BuildAimRay(bool applySpread)
-    {
+    public Ray BuildAimRay(bool applySpread) {
         float spreadX = 0f;
         float spreadY = 0f;
 
-        if (applySpread && gunData.ErrorRange > 0f)
-        {
+        if(applySpread && gunData.ErrorRange > 0f) {
             spreadX = (Random.value - 0.5f) * 2f * gunData.ErrorRange / Screen.width;
             spreadY = (Random.value - 0.5f) * 2f * gunData.ErrorRange / Screen.height;
         }
@@ -109,17 +100,14 @@ public abstract class Gun : Weapons
     }
 
 
-    public void tryReload()
-    {
-        if (currentBullets < gunData.magazine)
-        {
+    public void tryReload() {
+        if(currentBullets < gunData.magazine) {
             StartCoroutine(Reloading());
         }
     }
-    
 
-    public IEnumerator Reloading()
-    {
+
+    public IEnumerator Reloading() {
 
         isReloading = true;
 
@@ -133,11 +121,10 @@ public abstract class Gun : Weapons
 
     }
 
-    public void HandleBulletRecoil()
-    {
+    public void HandleBulletRecoil() {
         bulletfiredcounter++;
 
-        if (bulletfiredcounter > 2)
+        if(bulletfiredcounter > 2)
             tempRecoilX += increaseRecoil;
         else tempRecoilX = recoilX;
 
@@ -145,15 +132,13 @@ public abstract class Gun : Weapons
     }
 
 
-    public void callFireEffects()
-    {
+    public void callFireEffects() {
 
-        if (animator != null)
-        {
+        if(animator != null) {
             animator.SetTrigger("fire");
         }
-               
-        
+
+
 
 
         var flash = Instantiate(muzzleFlash, muzzleFlashPosition.position, muzzleFlashPosition.rotation, muzzleFlashPosition);
@@ -161,18 +146,14 @@ public abstract class Gun : Weapons
         PlayerSoundManager.instance.Play(Sound.SoundType.WeaponBullets);
     }
 
-    public void callReloadAnimation()
-    {
-        if (animator != null)
-        {
+    public void callReloadAnimation() {
+        if(animator != null) {
             animator.SetTrigger("Reload");
-        }       
+        }
     }
 
-    public void UpdateAmmoDisplay()
-    {
-        if (AmmoTxt != null)
-        {
+    public void UpdateAmmoDisplay() {
+        if(AmmoTxt != null) {
             AmmoTxt.SetText(currentBullets.ToString());
         }
     }
