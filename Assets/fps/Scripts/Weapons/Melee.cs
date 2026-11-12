@@ -1,37 +1,30 @@
 using UnityEngine;
 
-public class Melee : Weapons    
-{ 
+public class Melee : Weapons {
 
-    public void Awake()
-    {
+    public void Awake() {
         base.Awake();
         WeaponRightHandpos = gameObject.transform.Find("uploads_files_4687838_KNIFE_VAR2/WeaponRight_Hand");
     }
 
     #region - onEnable/onDisable -
-    void OnEnable()
-    {       
+    void OnEnable() {
         InputManager.OnFire += Firepress;
     }
 
 
-    void OnDisable()
-    {       
+    void OnDisable() {
         InputManager.OnFire -= Firepress;
     }
     #endregion
 
 
-    void Start()
-    {
-        
-    }
-    public void callFireAnimation()
-    {
+    void Start() {
 
-        if (animator != null)
-        {
+    }
+    public void callFireAnimation() {
+
+        if(animator != null) {
             Debug.Log("fire ");
             animator.SetTrigger("fire");
         }
@@ -39,8 +32,7 @@ public class Melee : Weapons
         PlayerSoundManager.instance.Play(Sound.SoundType.Melee);
     }
 
-    public void attack()
-    {
+    public void attack() {
 
         AttackRateCounter = 0;
         callFireAnimation();
@@ -49,8 +41,7 @@ public class Melee : Weapons
         Ray ray = Playercamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
 
-        if (Physics.Raycast(ray, out RaycastHit hit, gunData.MaxTravelDistance, gunData.shootlayer))
-        {
+        if(Physics.Raycast(ray, out RaycastHit hit, gunData.MaxTravelDistance, gunData.shootlayer)) {
             // Debug.Log("hit " + hit.collider.name);
         }
 
@@ -58,31 +49,27 @@ public class Melee : Weapons
 
 
 
-    private void Firepress()
-    {
-         
+    private void Firepress() {
 
 
-        if (AttackRateCounter < gunData.FireRate)
-        {
+
+        if(AttackRateCounter < gunData.FireRate) {
             return;
-        }     
+        }
 
         attack();
     }
 
-    
 
-    void Update()
-    {
+
+    void Update() {
         AttackRateCounter += Time.deltaTime;
-        if(AttackRateCounter > 100)
-        {
+        if(AttackRateCounter > 100) {
             AttackRateCounter = gunData.FireRate;
         }
 
     }
 
 
-   
+
 }
