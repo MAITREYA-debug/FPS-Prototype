@@ -7,6 +7,7 @@ public class Rifle : Gun {
 
     #region - onEnable/onDisable -
     void OnEnable() {
+        base.OnEnable();
         InputManager.OnReload += tryReload;
 
     }

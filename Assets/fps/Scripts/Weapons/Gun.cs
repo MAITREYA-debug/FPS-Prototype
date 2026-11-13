@@ -53,7 +53,8 @@ public abstract class Gun : Weapons {
         ScopePosition = transform.Find("InSight").GetComponent<Transform>();
     }
 
-    private void OnEnable() {
+    public void OnEnable() {
+
         playerController.setGunRecoilData(recoilY, recoilRecovery, recoilSnappiness);
         UpdateAmmoDisplay();
         tempRecoilX = recoilX;

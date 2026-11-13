@@ -5,7 +5,8 @@ public class Pistol : Gun {
 
 
     #region - onEnable/onDisable -
-    void OnEnable() {
+    public void OnEnable() {
+            base.OnEnable();
         InputManager.OnReload += tryReload;
         InputManager.OnFire += Firepress;
     }
