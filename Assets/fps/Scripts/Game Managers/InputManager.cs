@@ -28,6 +28,8 @@ public class InputManager : MonoBehaviour {
             Destroy(gameObject);
             return;
         }
+        
+        cursorLock();
 
         instance = this;
         input = new InputActions();
@@ -44,7 +46,10 @@ public class InputManager : MonoBehaviour {
         input.Player.Jump.performed += Jump_performed;
         input.Player.Interact.performed += Interact_performed;
 
+        input.Player.Quit.performed += _ => cursorUnlock();
 
+
+        
 
         // Weapon
         input.Weapon.Fire2Press.performed += _ => isAimingIn = true;
@@ -66,6 +71,15 @@ public class InputManager : MonoBehaviour {
         input.Enable();
     }
 
+
+    void cursorLock() {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+    void cursorUnlock() {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }   
 
 
 
@@ -97,6 +111,7 @@ public class InputManager : MonoBehaviour {
         OnJump?.Invoke();
     }
     private void Fire1Press_performed(InputAction.CallbackContext obj) {
+        cursorLock();
         OnFire?.Invoke();
     }
 
